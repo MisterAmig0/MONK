@@ -22,26 +22,36 @@
 </div>
 
 <div class="home-page-navigation">
-    <div class="navigation-block UltraVoilet">
-        <h3>Journaling</h3>
-        <p>Write something for today</p>
-    </div>
-    <div class="navigation-block azurLana">
-        <h3>Monk mode</h3>
-        <p>Track your progress or set goals</p>
-    </div>
-    <div class="navigation-block Rader">
-        <h3>Goals</h3>
-        <p>Track your progress or set goals</p>
-    </div>
-    <div class="navigation-block Anamnisar">
-        <h3>Health</h3>
-        <p>Water intake, sleep and food recipes</p>
-    </div>
-    <div class="navigation-block PiggyPink">
-        <h3>Finance</h3>
-        <p>Insights in your expenses and savings</p>
-    </div>
+    <a href="{{ url_for('journaling') }}" class="navigation-link">
+        <div class="navigation-block UltraVoilet">
+            <h3>Journaling</h3>
+            <p>Write something for today</p>
+        </div>
+    </a>
+    <a href="{{ url_for('monk_mode') }}" class="navigation-link">
+        <div class="navigation-block azurLana">
+            <h3>Monk mode</h3>
+            <p>Track your progress or set goals</p>
+        </div>
+    </a>
+    <a href="{{ url_for('goals') }}" class="navigation-link">
+        <div class="navigation-block Rader">
+            <h3>Goals</h3>
+            <p>Track your progress or set goals</p>
+        </div>
+    </a>
+    <a href="{{ url_for('health') }}" class="navigation-link">
+        <div class="navigation-block Anamnisar">
+            <h3>Health</h3>
+            <p>Water intake, sleep and food recipes</p>
+        </div>
+    </a>
+    <a href="{{ url_for('finance') }}" class="navigation-link">
+        <div class="navigation-block PiggyPink">
+            <h3>Finance</h3>
+            <p>Insights in your expenses and savings</p>
+        </div>
+    </a>
 </div>
 
 </body>

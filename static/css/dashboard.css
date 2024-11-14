@@ -60,3 +60,8 @@
 .Anamnisar { background: url(/static/images/background/Anamnisar.png) 50% / cover no-repeat;}
 .PiggyPink { background: url(/static/images/background/PiggyPink.png) 50% / cover no-repeat; margin-bottom: 200px;}
 
+.navigation-link {
+    text-decoration: none;
+    width: 100%;
+    color: inherit; /* Ensures the link text color is inherited */
+}

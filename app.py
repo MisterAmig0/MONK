@@ -40,5 +40,36 @@ def save_data():
     
     return redirect(url_for('user_home'))
 
+@app.route('/journaling')
+def journaling():
+    if 'username' not in session:
+        return redirect(url_for('user_select'))
+    return render_template('journaling.html', username=session['username'])
+
+@app.route('/monk_mode')
+def monk_mode():
+    if 'username' not in session:
+        return redirect(url_for('user_select'))
+    return render_template('monk_mode.html', username=session['username'])
+
+@app.route('/goals')
+def goals():
+    if 'username' not in session:
+        return redirect(url_for('user_select'))
+    return render_template('goals.html', username=session['username'])
+
+@app.route('/health')
+def health():
+    if 'username' not in session:
+        return redirect(url_for('user_select'))
+    return render_template('health.html', username=session['username'])
+
+@app.route('/finance')
+def finance():
+    if 'username' not in session:
+        return redirect(url_for('user_select'))
+    return render_template('finance.html', username=session['username'])
+
+
 if __name__ == '__main__':
     app.run(debug=True)
