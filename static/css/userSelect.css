@@ -16,6 +16,9 @@
   flex-direction: column;
   align-items: center;
 }
+.user-icon > a > p {
+  color: var(--white);
+}
 
 .fingerprint {
   width: 80px;
