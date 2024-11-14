@@ -158,3 +158,29 @@
   h1, h2, h3 {
     line-height: 1.2;
   }
+
+.user-icon > a > p {
+  color: var(--white);
+}
+
+.icon {
+  width: 80px;
+  height: 80px;
+  background-color: #222;
+  border: 2px solid white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.icon::before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+}
