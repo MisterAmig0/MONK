@@ -1,14 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/static/dashboard.css">
+<link rel="stylesheet" href="/static/style.css">
+<title>Greeting with Font Awesome Icons</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <h1>Welcome to the Dashboard</h1>
-    <p>Choose a name to view specific content:</p>
-    <button onclick="window.location.href='/content/illias'">Illias</button>
-    <button onclick="window.location.href='/content/sam'">Sam</button>
+
+<div class="header">
+    <div class="greeting">
+        Hello,<br>
+        <span class="name">Name</span>
+    </div>
+    <div class="icons">
+        <div class="icon"><i class="fas fa-fire"></i></div> 
+        <div class="icon"><i class="fas fa-cog"></i></div> 
+    </div>
+</div>
+
+<div class="home-page-navigation">
+    <div class="navigation-block UltraVoilet">
+        <h3>Journaling</h3>
+        <p>Write something for today</p>
+    </div>
+    <div class="navigation-block azurLana">
+        <h3>Monk mode</h3>
+        <p>Track your progress or set goals</p>
+    </div>
+    <div class="navigation-block Rader">
+        <h3>Goals</h3>
+        <p>Track your progress or set goals</p>
+    </div>
+    <div class="navigation-block Anamnisar">
+        <h3>Health</h3>
+        <p>Water intake, sleep and food recepies</p>
+    </div>
+    <div class="navigation-block PiggyPink">
+        <h3>Finance</h3>
+        <p>Insights in your expenses and savings</p>
+    </div>
+</div>
+
 </body>
 </html>
