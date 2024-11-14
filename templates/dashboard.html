@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/static/dashboard.css">
-<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/css/dashboard.css">
+<link rel="stylesheet" href="/static/css/style.css">
 <title>Greeting with Font Awesome Icons</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -13,7 +13,7 @@
 <div class="header">
     <div class="greeting">
         Hello,<br>
-        <span class="name">Name</span>
+        <span class="name">{{ username }}</span> <!-- Display the username here -->
     </div>
     <div class="icons">
         <div class="icon"><i class="fas fa-fire"></i></div> 
@@ -36,7 +36,7 @@
     </div>
     <div class="navigation-block Anamnisar">
         <h3>Health</h3>
-        <p>Water intake, sleep and food recepies</p>
+        <p>Water intake, sleep and food recipes</p>
     </div>
     <div class="navigation-block PiggyPink">
         <h3>Finance</h3>
