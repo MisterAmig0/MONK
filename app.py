@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.middleware.proxy_fix import ProxyFix
+from datetime import datetime
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with a secure secret key for session management
@@ -62,7 +64,9 @@ def goals():
 def health():
     if 'username' not in session:
         return redirect(url_for('user_select'))
-    return render_template('health.html', username=session['username'])
+    # Get current month and year
+    current_date = datetime.now().strftime("%B , %Y")  # Format: "Month Year"
+    return render_template('health.html', username=session['username'], current_date=current_date)
 
 @app.route('/finance')
 def finance():
