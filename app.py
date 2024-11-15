@@ -46,7 +46,8 @@ def save_data():
 def journaling():
     if 'username' not in session:
         return redirect(url_for('user_select'))
-    return render_template('journaling.html', username=session['username'])
+    current_date = datetime.now().strftime("%B , %Y")  # Format: "Month Year"
+    return render_template('journaling.html', username=session['username'], current_date=current_date)
 
 @app.route('/monk_mode')
 def monk_mode():

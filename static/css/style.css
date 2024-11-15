@@ -184,3 +184,21 @@
   background-repeat: no-repeat;
   border-radius: 50%;
 }
+
+
+.back-button::before {
+  background-image: url('/static/images/icons/arrow-back.png');
+}
+.icon {
+    width: 53px;
+    height: 53px;
+}
+.user-icon {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 50px;
+    }
+
+    .health-name-header {
+        text-align: center;
+    }
