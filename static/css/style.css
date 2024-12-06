@@ -92,38 +92,33 @@
   
   /* Headings for desktop/tablets */
   h1 {
-    font-size: 6.5rem; /* 40px */
+    font-size: 45px; 
     font-family: PPMORI-SemiBold;
   }
   
   h2 {
-    font-size: 4rem;   /* 32px */
+    font-size: 40px;   
     font-family: PPMORI-SemiBold;
   }
   
   h3 {
-    font-size: 3.75rem; /* 28px */
+    font-size: 30px; 
     font-weight: 100;
     font-family: PPMORI-SemiBold;
   }
   
   h4 {
-    font-size: 3.5rem;  /* 24px */
+    font-size: 20px; 
     font-family: PPMORI-SemiBold;
 
   }
   
   h5 {
-    font-size: 3.25rem; /* 20px */
+    font-size: 10px; 
     font-family: PPMORI-SemiBold;
 
   }
   
-  h6 {
-    font-size: 3rem;    /* 16px */
-    font-family: PPMORI-SemiBold;
-
-  }
   
   /* Paragraphs and text */
   p,

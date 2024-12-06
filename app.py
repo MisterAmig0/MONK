@@ -10,6 +10,8 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 # Dummy users
 users = ["Illias", "Sam"]
 
+# --- Login / User Select ---
+
 @app.route('/')
 def user_select():
     return render_template('index.html', users=users)
@@ -42,6 +44,8 @@ def save_data():
     
     return redirect(url_for('user_home'))
 
+# --- Journaling ---
+
 @app.route('/journaling')
 def journaling():
     if 'username' not in session:
@@ -49,17 +53,23 @@ def journaling():
     current_date = datetime.now().strftime("%B , %Y")  # Format: "Month Year"
     return render_template('journaling.html', username=session['username'], current_date=current_date)
 
+# --- Monk mode ---
+
 @app.route('/monk_mode')
 def monk_mode():
     if 'username' not in session:
         return redirect(url_for('user_select'))
     return render_template('monk_mode.html', username=session['username'])
 
+# --- Goals ---
+
 @app.route('/goals')
 def goals():
     if 'username' not in session:
         return redirect(url_for('user_select'))
     return render_template('goals.html', username=session['username'])
+
+# --- Health tracker ---
 
 @app.route('/health')
 def health():
@@ -68,6 +78,8 @@ def health():
     # Get current month and year
     current_date = datetime.now().strftime("%B , %Y")  # Format: "Month Year"
     return render_template('health.html', username=session['username'], current_date=current_date)
+
+# --- Bank ---
 
 @app.route('/finance')
 def finance():
