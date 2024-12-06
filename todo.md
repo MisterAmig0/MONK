@@ -1,0 +1,10 @@
+- Zorgen dat het opslaat op de pagina bij refresh
+- Zorgen dat het alleen bij je zelf komt en niet bij andere users
+- Dat je bericht kan bewerken en altijd opslaat
+- Wanneer je hem submit het design mooi hebben
+- Plus container andere naam geven
+- Dat je dagen kan selecten dus heen en weer ka  gaan
+- Dat je bij elke dag de content van de dag hebt 
+- Dat je maar en post per dag kan maken
+- Dat er staat hoeveel dagen je achter elkaar hebt ingevuld
+- Dat er staat hoeveel je in totaal hebt geschreven 

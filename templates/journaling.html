@@ -92,7 +92,10 @@
         }
 
         .entry-item {
-            background: #f9f9f9;
+            box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.10);
+            border-radius: 7px;
+            color: white;
+            background: #868687;
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
@@ -211,10 +214,10 @@
             const entry = document.createElement("div");
             entry.classList.add("entry-item");
             entry.innerHTML = `
-                <p><strong>Wat wil je vandaag allemaal doen?</strong> ${question1}</p>
-                <p><strong>Waar ben je vandaag trots / dankbaar voor?</strong> ${question2}</p>
-                <p><strong>Wat wil je morgen allemaal doen?</strong> ${question3}</p>
-                <p><strong>Waar zit of liep je vandaag tegen aan?</strong> ${question4}</p>
+                <p><strong>Wat wil je vandaag allemaal doen?</strong> ${question1}</p><br>
+                <p><strong>Waar ben je vandaag trots / dankbaar voor?</strong> ${question2}</p><br>
+                <p><strong>Wat wil je morgen allemaal doen?</strong> ${question3}</p><br>
+                <p><strong>Waar zit of liep je vandaag tegen aan?</strong> ${question4}</p><br>
             `;
             entryList.appendChild(entry);
 
