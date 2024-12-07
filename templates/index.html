@@ -3,15 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select User</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>Monk - User Select</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/userSelect.css">
 </head>
 <body>
-    <h1>Select a User</h1>
-    <form action="/select_theme" method="post">
-        {% for user in users %}
-        <button type="submit" name="user" value="{{ user }}">{{ user }}</button>
-        {% endfor %}
-    </form>
+    <div class="user-container">
+        <img src="/static/images/logo/logo.png" alt="Logo monk mode">
+        <p>Welcome back!</p>
+        <div class="select-container">
+            <div class="user-icon">
+                <a href="{{ url_for('select_user', username='Illias') }}">
+                    <div class="icon"></div>
+                    <p>Illias</p>
+                </a>
+            </div>
+            <div class="user-icon">
+                <a href="{{ url_for('select_user', username='Sam') }}">
+                    <div class="icon"></div>
+                    <p>Sam</p>
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

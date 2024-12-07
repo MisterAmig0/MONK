@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize the database
 db = SQLAlchemy(app)
 
-# Database models
+# --- Database models ---
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(50), nullable=False)
@@ -29,21 +29,31 @@ class Post(db.Model):
             "question4": self.question4,
         }
 
-# Simulated user list
-users = ["User1", "User2"]
-
+# --- Login page ---
 @app.route('/')
 def index():
-    return render_template('index.html', users=users)
+    return render_template('index.html')
 
-@app.route('/select_theme', methods=['POST'])
+@app.route('/select_user/<username>')
+def select_user(username):
+    session['user'] = username
+    return redirect(url_for('select_theme'))
+
+# --- Select theme ---
+@app.route('/select_theme')
 def select_theme():
-    session['user'] = request.form['user']
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
     return render_template('select_theme.html')
 
+# --- Journaling ---
 @app.route('/journaling', methods=['GET', 'POST'])
 def journaling():
     user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+
     if request.method == 'POST':
         edit_id = request.form.get('edit_id', '')
 
