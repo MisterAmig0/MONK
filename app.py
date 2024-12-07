@@ -1,92 +1,38 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from werkzeug.middleware.proxy_fix import ProxyFix
-from datetime import datetime
-
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Replace with a secure secret key for session management
-app.wsgi_app = ProxyFix(app.wsgi_app)
+app.secret_key = 'your_secret_key'
 
-# Dummy users
-users = ["Illias", "Sam"]
-
-# --- Login / User Select ---
+# Simulated database for users and posts
+users = ["User1", "User2"]
+posts = {
+    "User1": [],
+    "User2": []
+}
 
 @app.route('/')
-def user_select():
+def index():
     return render_template('index.html', users=users)
 
-@app.route('/select_user/<username>')
-def select_user(username):
-    # Ensure valid user
-    if username not in users:
-        return redirect(url_for('user_select'))
-    
-    # Set selected user in session
-    session['username'] = username
-    if 'user_data' not in session:
-        session['user_data'] = {}
-    
-    # Render dashboard.html with the selected username
-    return render_template('dashboard.html', username=username)
+@app.route('/select_theme', methods=['POST'])
+def select_theme():
+    session['user'] = request.form['user']
+    return render_template('select_theme.html')
 
-@app.route('/save_data', methods=['POST'])
-def save_data():
-    if 'username' not in session:
-        return redirect(url_for('user_select'))
-    
-    username = session['username']
-    data = request.form['user_input']
-    
-    # Save data specifically to the user's session
-    session['user_data'][username] = data
-    session.modified = True  # Ensure session changes are saved
-    
-    return redirect(url_for('user_home'))
-
-# --- Journaling ---
-
-@app.route('/journaling')
+@app.route('/journaling', methods=['GET', 'POST'])
 def journaling():
-    if 'username' not in session:
-        return redirect(url_for('user_select'))
-    current_date = datetime.now().strftime("%B , %Y")  # Format: "Month Year"
-    return render_template('journaling.html', username=session['username'], current_date=current_date)
-
-# --- Monk mode ---
-
-@app.route('/monk_mode')
-def monk_mode():
-    if 'username' not in session:
-        return redirect(url_for('user_select'))
-    return render_template('monk_mode.html', username=session['username'])
-
-# --- Goals ---
-
-@app.route('/goals')
-def goals():
-    if 'username' not in session:
-        return redirect(url_for('user_select'))
-    return render_template('goals.html', username=session['username'])
-
-# --- Health tracker ---
-
-@app.route('/health')
-def health():
-    if 'username' not in session:
-        return redirect(url_for('user_select'))
-    # Get current month and year
-    current_date = datetime.now().strftime("%B , %Y")  # Format: "Month Year"
-    return render_template('health.html', username=session['username'], current_date=current_date)
-
-# --- Bank ---
-
-@app.route('/finance')
-def finance():
-    if 'username' not in session:
-        return redirect(url_for('user_select'))
-    return render_template('finance.html', username=session['username'])
-
+    user = session.get('user')
+    if request.method == 'POST':
+        # Collect the answers from the modal form
+        question1 = request.form['question1']
+        question2 = request.form['question2']
+        question3 = request.form['question3']
+        question4 = request.form['question4']
+        # Combine the answers into a single post
+        post_content = f"1. {question1}\n2. {question2}\n3. {question3}\n4. {question4}"
+        posts[user].append(post_content)
+    user_posts = posts.get(user, [])
+    return render_template('journaling.html', posts=user_posts)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -3,227 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/style.css">
     <title>Journaling</title>
-    <style>
-        /* Styling for modal form */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            color: black;
-            z-index: 1000;
-        }
-        
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-height: 80%; /* Beperk de hoogte van de modal */
-            overflow-y: auto; /* Schakel scrollen in als inhoud te lang is */
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .close-button {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-        }
-        
-        .form-group {
-            margin: 15px 0;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 60px; /* Startgrootte */
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            resize: none; /* Sta resizing niet toe door gebruiker */
-            overflow: hidden; /* Zorg ervoor dat er geen scrollbar is */
-        }
-
-        
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            height: 120px; /* Vergroot de hoogte */
-            resize: vertical; /* Sta verticale resizing toe */
-        }
-        
-        .submit-button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-
-        .entry-list {
-            margin: 30px 20px;
-        }
-
-        .entry-item {
-            box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.10);
-            border-radius: 7px;
-            color: white;
-            background: #868687;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
-
-        .circle-button {
-            width: 100px;
-            height: 100px;
-            background-color: #f0f0f0; 
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-            position: fixed; 
-            bottom: 80px;
-            left: 50%; 
-            transform: translateX(-50%); 
-            cursor: pointer;
-        }
-
-        .plus-sign {
-            position: relative;
-            width: 40px;
-            height: 6px;
-            background-color: #000;
-        }
-
-        .plus-sign::before {
-            content: '';
-            position: absolute;
-            top: -17px;
-            left: 17px;
-            width: 6px;
-            height: 40px;
-            background-color: #000; 
-        }
-    </style>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/scripts.js" defer></script>
 </head>
 <body>
-    <div class="navigaton-header">
-        <div class="user-icon">
-            <a href="{{ url_for('select_user', username=session['username']) }}">
-                <div class="icon back-button"></div>
-            </a>
-        </div>
-    </div>
-    <div class="health-name-header">
-        <p>{{ current_date }}</p>
-        <h3>Journaling</h3>
-    </div>
-    <div class="entry-list" id="entry-list"></div>     <!-- Entires worden hier ingevuld -->
+    <h1>Welcome to Journaling</h1>
+    <button id="openModal">Create a Post</button>
 
-    <div class="circle-button" onclick="openModal()">
-        <div class="plus-sign"></div>
-    </div>
-
-    <!-- Modal for form -->
-    <div class="modal" id="modal">
+    <!-- Modal -->
+    <div id="modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3>Journaling</h3>
-                <button class="close-button" onclick="closeModal()">&times;</button>
-            </div>
-            <form id="journal-form">
-                <div class="form-group">
-                    <label for="question1">Wat wil je vandaag allemaal doen?</label>
-                    <textarea id="question1" name="question1" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="question2">Waar ben je vandaag trots / dankbaar voor?</label>
-                    <textarea id="question2" name="question2" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="question3">Wat wil je morgen allemaal doen?</label>
-                    <textarea id="question3" name="question3" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="question4">Waar zit of liep je vandaag tegen aan?</label>
-                    <textarea id="question4" name="question4" rows="3"></textarea>
-                </div>
-                
-                <button type="submit" class="submit-button">Submit</button>
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Create Your Journal Entry</h2>
+            <form action="/journaling" method="post">
+                <label for="question1">1. What made you happy today?</label>
+                <textarea id="question1" name="question1" required></textarea>
+
+                <label for="question2">2. What challenges did you face?</label>
+                <textarea id="question2" name="question2" required></textarea>
+
+                <label for="question3">3. What are you grateful for?</label>
+                <textarea id="question3" name="question3" required></textarea>
+
+                <label for="question4">4. What goals do you have for tomorrow?</label>
+                <textarea id="question4" name="question4" required></textarea>
+
+                <button type="submit">Submit</button>
             </form>
         </div>
     </div>
 
-    <script>
-        const modal = document.getElementById("modal");
-        const form = document.getElementById("journal-form");
-        const entryList = document.getElementById("entry-list");
-
-        document.querySelectorAll("textarea").forEach((textarea) => {
-        textarea.addEventListener("input", function () {
-            this.style.height = "auto"; // Reset de hoogte
-            this.style.height = this.scrollHeight + "px"; // Pas hoogte aan op basis van inhoud
-        });
-    });
-
-
-        function openModal() {
-            modal.style.display = "flex";
-        }
-
-        function closeModal() {
-            modal.style.display = "none";
-        }
-
-        form.addEventListener("submit", function(event) {
-            event.preventDefault();
-            const question1 = document.getElementById("question1").value;
-            const question2 = document.getElementById("question2").value;
-            const question3 = document.getElementById("question3").value;
-            const question4 = document.getElementById("question4").value;
-
-            const entry = document.createElement("div");
-            entry.classList.add("entry-item");
-            entry.innerHTML = `
-                <p><strong>Wat wil je vandaag allemaal doen?</strong> ${question1}</p><br>
-                <p><strong>Waar ben je vandaag trots / dankbaar voor?</strong> ${question2}</p><br>
-                <p><strong>Wat wil je morgen allemaal doen?</strong> ${question3}</p><br>
-                <p><strong>Waar zit of liep je vandaag tegen aan?</strong> ${question4}</p><br>
-            `;
-            entryList.appendChild(entry);
-
-            form.reset();
-            closeModal();
-        });
-    </script>
+    <h2>Your Posts</h2>
+    <ul>
+        {% for post in posts %}
+        <li><pre>{{ post }}</pre></li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
+<style>
+    /* General styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+h1, h2 {
+    color: #555;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background: #e7e7e7;
+    margin-bottom: 5px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
+/* Modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 5px;
+    position: relative;
+}
+
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+textarea {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+</style>
+<script>
+    // JavaScript for modal functionality
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('modal');
+    const openModal = document.getElementById('openModal');
+    const closeModal = document.getElementById('closeModal');
+
+    openModal.addEventListener('click', () => {
+        modal.style.display = 'block';
+    });
+
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+
+</script>
