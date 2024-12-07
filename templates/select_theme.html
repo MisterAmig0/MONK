@@ -4,13 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Theme</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
 </head>
 <body>
-    <h1>Select a Theme</h1>
-    <ul>
-        <li><a href="/journaling">Journaling</a></li>
-        <!-- Add more themes here -->
-    </ul>
+    <div class="header">
+        <div class="greeting">
+            Hello,<br>
+            <span class="name">{{ session.get('user', 'Guest') }}</span> 
+        </div>
+        <div class="icons">
+            <div class="begin-icon "><i class="fas fa-fire"></i></div> 
+            <div class="begin-icon "><i class="fas fa-cog"></i></div> 
+        </div>
+    </div>
+    <div class="home-page-navigation">
+        <a href="{{ url_for('journaling') }}" class="navigation-link">
+            <div class="navigation-block UltraVoilet">
+                <h3>Journaling</h3>
+                <p>Write something for today</p>
+            </div>
+        </a>
+        <a href="{{ url_for('monk_mode') }}" class="navigation-link">
+            <div class="navigation-block azurLana">
+                <h3>Monk Mode</h3>
+                <p>Track your progress or set goals</p>
+            </div>
+        </a>
+        <a href="{{ url_for('goals') }}" class="navigation-link">
+            <div class="navigation-block Rader">
+                <h3>Goals</h3>
+                <p>Track your progress or set goals</p>
+            </div>
+        </a>
+        <a href="{{ url_for('health') }}" class="navigation-link">
+            <div class="navigation-block Anamnisar">
+                <h3>Health</h3>
+                <p>Water intake, sleep and food recipes</p>
+            </div>
+        </a>
+        <a href="{{ url_for('finance') }}" class="navigation-link">
+            <div class="navigation-block PiggyPink">
+                <h3>Finance</h3>
+                <p>Insights in your expenses and savings</p>
+            </div>
+        </a>
+    </div>
 </body>
 </html>

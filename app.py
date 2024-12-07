@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize the database
 db = SQLAlchemy(app)
 
-# --- Database models ---
+# Database models
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(50), nullable=False)
@@ -29,7 +29,6 @@ class Post(db.Model):
             "question4": self.question4,
         }
 
-# --- Login page ---
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -39,7 +38,6 @@ def select_user(username):
     session['user'] = username
     return redirect(url_for('select_theme'))
 
-# --- Select theme ---
 @app.route('/select_theme')
 def select_theme():
     user = session.get('user')
@@ -47,7 +45,6 @@ def select_theme():
         return redirect(url_for('index'))
     return render_template('select_theme.html')
 
-# --- Journaling ---
 @app.route('/journaling', methods=['GET', 'POST'])
 def journaling():
     user = session.get('user')
@@ -80,8 +77,36 @@ def journaling():
     user_posts = Post.query.filter_by(user=user).all()
     return render_template('journaling.html', posts=[post.to_dict() for post in user_posts])
 
+# Placeholder routes for other themes
+@app.route('/monk_mode')
+def monk_mode():
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+    return render_template('monk_mode.html', user=user)
+
+@app.route('/goals')
+def goals():
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+    return render_template('goals.html', user=user)
+
+@app.route('/health')
+def health():
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+    return render_template('health.html', user=user)
+
+@app.route('/finance')
+def finance():
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+    return render_template('finance.html', user=user)
+
 if __name__ == '__main__':
-    # Create database tables if they don't exist
     with app.app_context():
         db.create_all()
     app.run(debug=True)
