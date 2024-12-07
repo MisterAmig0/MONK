@@ -9,6 +9,15 @@
 </head>
 <body>
     <h1>Welcome to Journaling</h1>
+
+    <!-- Date Selector -->
+    <form method="get" action="/journaling">
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" name="date" value="{{ selected_date }}">
+        <button type="submit">Go</button>
+    </form>
+
+    <!-- Button to create a new post -->
     <button id="openModal">Create a Post</button>
 
     <!-- Modal for creating/editing posts -->
@@ -16,9 +25,9 @@
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
             <h2 id="modalTitle">Create Your Journal Entry</h2>
-            <form id="modalForm" action="/journaling" method="post">
+            <form id="modalForm" action="/journaling?date={{ selected_date }}" method="post">
                 <input type="hidden" id="editId" name="edit_id">
-                
+
                 <label for="question1">1. What made you happy today?</label>
                 <textarea id="question1" name="question1" required></textarea>
 
@@ -36,7 +45,7 @@
         </div>
     </div>
 
-    <h2>Your Posts</h2>
+    <h2>Posts for {{ selected_date }}</h2>
     <ul>
         {% for post in posts %}
         <li>
@@ -56,6 +65,7 @@
     </ul>
 </body>
 </html>
+
 
 <script>
    // JavaScript for modal functionality and editing

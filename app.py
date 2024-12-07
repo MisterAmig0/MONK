@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -15,6 +16,7 @@ db = SQLAlchemy(app)
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(50), nullable=False)
+    date = db.Column(db.Date, nullable=False)
     question1 = db.Column(db.Text, nullable=False)
     question2 = db.Column(db.Text, nullable=False)
     question3 = db.Column(db.Text, nullable=False)
@@ -23,6 +25,7 @@ class Post(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
+            "date": self.date.isoformat(),
             "question1": self.question1,
             "question2": self.question2,
             "question3": self.question3,
@@ -51,6 +54,10 @@ def journaling():
     if not user:
         return redirect(url_for('index'))
 
+    # Get selected date or default to today
+    selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
+    selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
+
     if request.method == 'POST':
         edit_id = request.form.get('edit_id', '')
 
@@ -64,6 +71,7 @@ def journaling():
         else:  # Create a new post
             new_post = Post(
                 user=user,
+                date=selected_date,
                 question1=request.form['question1'],
                 question2=request.form['question2'],
                 question3=request.form['question3'],
@@ -73,9 +81,9 @@ def journaling():
 
         db.session.commit()  # Save changes to the database
 
-    # Fetch posts for the current user
-    user_posts = Post.query.filter_by(user=user).all()
-    return render_template('journaling.html', posts=[post.to_dict() for post in user_posts])
+    # Fetch posts for the selected date
+    user_posts = Post.query.filter_by(user=user, date=selected_date).all()
+    return render_template('journaling.html', posts=[post.to_dict() for post in user_posts], selected_date=selected_date)
 
 # Placeholder routes for other themes
 @app.route('/monk_mode')
