@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from datetime import datetime, timedelta  # Import timedelta
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -95,9 +97,9 @@ def journaling():
         'journaling.html',
         posts=[post.to_dict() for post in user_posts],
         selected_date=selected_date,
-        formatted_day_date=formatted_day_date  # Pass formatted day and date
+        formatted_day_date=formatted_day_date,  # Pass formatted day and date
+        timedelta=timedelta  # Pass timedelta to the template
     )
-
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
     user = session.get('user')
