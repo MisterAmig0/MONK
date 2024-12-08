@@ -59,6 +59,11 @@ def journaling():
     selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
 
     if request.method == 'POST':
+        # Check if a post for the selected date already exists
+        existing_post = Post.query.filter_by(user=user, date=selected_date).first()
+        if existing_post and not request.form.get('edit_id'):  # Prevent multiple posts for the same day
+            return redirect(url_for('journaling', date=selected_date.strftime('%Y-%m-%d')))
+
         edit_id = request.form.get('edit_id', '')
 
         if edit_id:  # Update an existing post
@@ -84,6 +89,20 @@ def journaling():
     # Fetch posts for the selected date
     user_posts = Post.query.filter_by(user=user, date=selected_date).all()
     return render_template('journaling.html', posts=[post.to_dict() for post in user_posts], selected_date=selected_date)
+
+@app.route('/delete_post/<int:post_id>', methods=['POST'])
+def delete_post(post_id):
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+
+    post = Post.query.filter_by(id=post_id, user=user).first()
+    if post:
+        db.session.delete(post)
+        db.session.commit()
+
+    selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
+    return redirect(url_for('journaling', date=selected_date))
 
 # Placeholder routes for other themes
 @app.route('/monk_mode')
