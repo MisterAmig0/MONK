@@ -12,11 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const question3Field = document.getElementById('question3');
     const question4Field = document.getElementById('question4');
 
-    const editButtons = document.querySelectorAll('.editPost');
+    const editButtons = document.querySelectorAll('.edit-post');
 
     // Open modal for creating a new post
     openModal.addEventListener('click', () => {
-        modalTitle.textContent = 'Create Your Journal Entry';
+        modalTitle.textContent = 'Journaling';
         modalForm.reset();
         editIdField.value = ''; // Ensure no edit ID is set for creating a new post
         modal.style.display = 'block';

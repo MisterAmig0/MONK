@@ -135,6 +135,10 @@
   
   }
   
+
+  button {
+    cursor: pointer;
+  }
   /* Small text */
   small {
     font-size: 0.875rem; /* 14px */

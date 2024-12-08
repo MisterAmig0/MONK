@@ -88,6 +88,32 @@ textarea {
 }
 
 
+.circle-button {
+  width: 80px;
+  height: 80px;
+  background-color: #f5f5f5; /* Light gray background */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Adds subtle depth */
+  cursor: pointer;
+
+  /* Center at the bottom middle */
+  position: fixed;
+  bottom: 20px; /* Distance from the bottom of the viewport */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust for exact center alignment */
+}
+
+.plus-icon {
+  font-size: 36px;
+  color: #000; /* Black color for the plus icon */
+  font-family: Arial, sans-serif;
+  line-height: 1;
+}
+
+
 @media (max-width: 600px) {
     .modal-content {
         width: 90%; 
