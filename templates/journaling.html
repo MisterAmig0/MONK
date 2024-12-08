@@ -8,6 +8,22 @@
     <link rel="stylesheet" href="/static/css/journaling.css">
 </head>
 <body>
+    <div class="navigaton-header">
+        <div class="user-icon">
+            <a href="{{ url_for('select_theme') }}">
+                <div class="icon back-button"></div>
+            </a>
+            <a href="{{ url_for('select_user', username='Sam') }}">
+                <div class="icon"></div>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="date-header">
+        <p>{{ selected_date }}</p>
+        <h2>Journaling</h2>
+    </div>
     <!-- Date Selector -->
     <form method="get" action="/journaling">
         <label for="date">Select Date:</label>
@@ -20,7 +36,7 @@
         <span class="plus-icon">+</span>
       </button>
 
-      
+
     <!-- Modal for creating/editing posts -->
     <div id="modal" class="modal">
         <div class="modal-content">
