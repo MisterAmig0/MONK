@@ -22,49 +22,78 @@
     <div id="modal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
-            <h2 id="modalTitle">Create Your Journal Entry</h2>
+            <h2 id="modalTitle">Journaling</h2>
             <form id="modalForm" action="/journaling?date={{ selected_date }}" method="post">
                 <input type="hidden" id="editId" name="edit_id">
 
-                <label for="question1">1. What made you happy today?</label>
+                <h3 class="divided-journaling">Ochtend</h3>
+
+                <label for="question1">Wat wil je vandaag gaan doen?</label>
                 <textarea id="question1" name="question1" required></textarea>
 
-                <label for="question2">2. What challenges did you face?</label>
-                <textarea id="question2" name="question2" required></textarea>
+                <h3 class="divided-journaling">Avond</h3>
+                <label for="question2">Waar ben je vandaag trots op?</label>
+                <textarea id="question2" name="question2"></textarea>
 
-                <label for="question3">3. What are you grateful for?</label>
-                <textarea id="question3" name="question3" required></textarea>
+                <label for="question3">Wat wil je morgen gaan doen?</label>
+                <textarea id="question3" name="question3"></textarea>
 
-                <label for="question4">4. What goals do you have for tomorrow?</label>
-                <textarea id="question4" name="question4" required></textarea>
+                <label for="question4">Waar liep je vandaag tegen aan?</label>
+                <textarea id="question4" name="question4"></textarea>
 
                 <button type="submit">Submit</button>
             </form>
         </div>
     </div>
 
-    <h2>Posts for {{ selected_date }}</h2>
-    <ul>
-        {% for post in posts %}
-        <li>
-            <pre>1. {{ post.question1 }}
-        2. {{ post.question2 }}
-        3. {{ post.question3 }}
-        4. {{ post.question4 }}</pre>
-            <button class="editPost" data-id="{{ post.id }}" 
-                    data-question1="{{ post.question1 }}" 
-                    data-question2="{{ post.question2 }}" 
-                    data-question3="{{ post.question3 }}" 
-                    data-question4="{{ post.question4 }}">
-                Edit
-            </button>
-            <form action="/delete_post/{{ post.id }}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to delete this post?')">Delete</button>
-            </form>
-        </li>
-        
-        {% endfor %}
-    </ul>
+    <div class="post-container">
+        <ul class="post-list">
+            {% for post in posts %}
+            <li class="post-item">
+                <div class="header-post">
+                    <p>{{ formatted_day_date }}</p>
+                    <hr>
+                </div>
+                
+                <pre class="post-content">
+                    <div class="post-section-information">
+                        <h4>Wat wil je vandaag gaan doen?</h4>
+{{ post.question1 }}
+                    </div>
+                    <div class="post-section-information">
+                        <h4>Waar ben je vandaag trots op?</h4>
+{{ post.question2 }}
+                    </div>
+                    <div class="post-section-information">
+                        <h4>Wat wil je morgen gaan doen</h4>
+{{ post.question3 }}
+                    </div>
+                    <div class="post-section-information">
+                        <h4>Waar loop liep je vandaag tegen aan??</h4>
+{{ post.question4 }}
+                    </div>
+
+                </pre>
+                <div class="post-actions">
+                    <button class="btn edit-post" data-id="{{ post.id }}" 
+                            data-question1="{{ post.question1 }}" 
+                            data-question2="{{ post.question2 }}" 
+                            data-question3="{{ post.question3 }}" 
+                            data-question4="{{ post.question4 }}">
+                        Edit
+                    </button>
+                    <form action="/delete_post/{{ post.id }}" method="post" class="delete-form">
+                        <button type="submit" class="btn delete-post" 
+                                onclick="return confirm('Are you sure you want to delete this post?')">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    
     <script src="/static/js/modals/createPostModal.js" defer></script>
 </body>
 </html>
