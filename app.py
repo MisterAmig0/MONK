@@ -49,7 +49,6 @@ def select_theme():
     if not user:
         return redirect(url_for('index'))
     return render_template('select_theme.html')
-
 @app.route('/journaling', methods=['GET', 'POST'])
 def journaling():
     user = session.get('user')
@@ -98,8 +97,10 @@ def journaling():
         posts=[post.to_dict() for post in user_posts],
         selected_date=selected_date,
         formatted_day_date=formatted_day_date,  # Pass formatted day and date
-        timedelta=timedelta  # Pass timedelta to the template
+        timedelta=timedelta,  # Pass timedelta to the template
+        datetime=datetime  # Pass datetime to the template
     )
+
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
     user = session.get('user')

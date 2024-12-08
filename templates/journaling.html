@@ -24,25 +24,35 @@
         <p>{{ selected_date }}</p>
         <h2>Journaling</h2>
     </div>
-    <!-- Date Selector -->
-    <div id="dateCarousel" class="carousel-container">
-        <button class="carousel-btn" id="prevBtn">←</button>
-        <div class="carousel-dates">
-            {% for offset in range(-3, 4) %}
-            {% set current_date = (selected_date + timedelta(days=offset)) %}
-            <form method="get" action="/journaling" class="carousel-item">
-                <input type="hidden" name="date" value="{{ current_date }}">
-                <button 
-                    type="submit" 
-                    class="date-button {% if current_date == selected_date %}active{% endif %}">
-                    {{ current_date.strftime('%d') }}
+        <!-- Date Selector -->
+        <div id="dateCarousel" class="carousel-container">
+            <button class="carousel-btn" id="prevBtn">←</button>
+            <div class="carousel-dates">
+                {% for offset in range(-1, 6) %}
+                {% set current_date = (selected_date + timedelta(days=offset)) %}
+                <form method="get" action="/journaling" class="carousel-item">
+                    <input type="hidden" name="date" value="{{ current_date }}">
+                    <button 
+                        type="submit" 
+                        class="date-button {% if current_date == selected_date %}active{% endif %}">
+                        {{ current_date.strftime('%d') }}
+                    </button>
+                </form>
+                {% endfor %}
+            </div>
+            <button class="carousel-btn" id="nextBtn">→</button>
+        </div>
+
+        <!-- Go to Current Date Button -->
+        <div class="go-to-current">
+            <form method="get" action="/journaling">
+                <input type="hidden" name="date" value="{{ datetime.today().strftime('%Y-%m-%d') }}">
+                <button type="submit" class="current-date-button">
+                    Go to Current Date
                 </button>
             </form>
-            {% endfor %}
         </div>
-        <button class="carousel-btn" id="nextBtn">→</button>
-    </div>
-    
+
     
                 
 
