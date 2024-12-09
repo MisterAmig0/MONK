@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/food.css">
-    <title>Health</title>
+    <title>Monk - Health</title>
 </head>
 <body>
 
@@ -41,7 +41,7 @@
     <div id="filterPopup" class="popup">
         <div class="popup-content">
             <span class="close-popup">&times;</span>
-            <h3>Filter by Category</h3>
+            <h3>Filter</h3>
             <form id="filterForm" action="/health" method="GET">
                 <label>
                     <input type="radio" name="category" value="Recepten" {% if selected_category == 'Recepten' %}checked{% endif %}> Recepten
@@ -85,14 +85,14 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <form action="/health" method="POST" enctype="multipart/form-data">
-                <label for="title">Title:</label>
+                <label for="title">Titel:</label>
                 <input type="text" id="title" name="title" required>
                 
-                <label for="description">Description / Recipe:</label>
+                <label for="description">Omschrijving / Recept:</label>
                 <textarea id="description" name="description" required></textarea>
             
 
-                <label for="category">Category:</label>
+                <label for="category">Categorie:</label>
                     <select id="category" name="category" required>
                         <option value="Recepten">Recepten</option>
                         <option value="Fruit">Fruit</option>
@@ -109,28 +109,12 @@
                 <label for="kcal">KCal:</label>
                 <input type="number" id="kcal" name="kcal" required>
                 
-                <label for="image">Image:</label>
+                <label for="image">Foto:</label>
                 <input type="file" id="image" name="image" accept="image/*">
                 
-                <button type="submit">Add Food</button>
+                <button type="submit">Voeg toe</button>
             </form>
         </div>
-    </div>
-
-    <div class="food-container">
-        {% for food in food_items %}
-        <div class="food-item">
-            {% if food.image %}
-            <img src="{{ food.image }}" alt="{{ food.title }}" class="food-image">
-            {% endif %}
-            <h3>{{ food.title }}</h3>
-            <p>Category: {{ food.category }}</p>
-            <button class="edit-btn" data-id="{{ food.id }}" data-title="{{ food.title }}" data-description="{{ food.description }}" data-category="{{ food.category }}" data-kcal="{{ food.kcal }}" data-image="{{ food.image }}">Edit</button>
-            <form action="/delete_food/{{ food.id }}" method="POST" style="display:inline;">
-                <button type="submit" class="delete-btn">Delete</button>
-            </form>
-        </div>
-        {% endfor %}
     </div>
 
     <!-- Edit Modal -->
@@ -140,13 +124,13 @@
             <form action="/edit_food" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="edit-id" name="id">
                 
-                <label for="edit-title">Title:</label>
+                <label for="edit-title">Titel:</label>
                 <input type="text" id="edit-title" name="title" required>
                 
-                <label for="edit-description">Description / Recipe:</label>
+                <label for="edit-description">Omschrijving / Recep:</label>
                 <textarea id="edit-description" name="description" required></textarea>
                 
-                <label for="edit-category">Category:</label>
+                <label for="edit-category">Categorie:</label>
                 <select id="edit-category" name="category" required>
                     <option value="Recepten">Recepten</option>
                     <option value="Fruit">Fruit</option>
@@ -162,12 +146,27 @@
                 <label for="edit-kcal">KCal:</label>
                 <input type="number" id="edit-kcal" name="kcal" required>
                 
-                <label for="edit-image">Image:</label>
+                <label for="edit-image">Foto:</label>
                 <input type="file" id="edit-image" name="image" accept="image/*">
                 
-                <button type="submit">Save Changes</button>
+                <button type="submit">Bewerk</button>
             </form>
         </div>
+    </div>
+
+    <div class="food-container">
+        {% for food in food_items %}
+        <div class="food-item">
+            {% if food.image %}
+            <img src="{{ food.image }}" alt="{{ food.title }}" class="food-image">
+            {% endif %}
+            <h3>{{ food.title }}</h3>
+            <button class="edit-btn" data-id="{{ food.id }}" data-title="{{ food.title }}" data-description="{{ food.description }}" data-category="{{ food.category }}" data-kcal="{{ food.kcal }}" data-image="{{ food.image }}">Edit</button>
+            <form action="/delete_food/{{ food.id }}" method="POST" style="display:inline;">
+                <button type="submit" class="delete-btn">Verwijder</button>
+            </form>
+        </div>
+        {% endfor %}
     </div>
     </section>
     <script src="/static/js/modals/foodModal.js"></script>
