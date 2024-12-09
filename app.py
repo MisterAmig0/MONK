@@ -7,14 +7,14 @@ from datetime import datetime, timedelta  # Import timedelta
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-# Database configuration
+# --- Database configuration--
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///journaling.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize the database
 db = SQLAlchemy(app)
 
-# Database models
+# --- Database models ---
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(50), nullable=False)
@@ -34,6 +34,7 @@ class Post(db.Model):
             "question4": self.question4,
         }
 
+# --- Login ---
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -43,12 +44,16 @@ def select_user(username):
     session['user'] = username
     return redirect(url_for('select_theme'))
 
+# --- Select theme ---
+
 @app.route('/select_theme')
 def select_theme():
     user = session.get('user')
     if not user:
         return redirect(url_for('index'))
     return render_template('select_theme.html')
+
+# --- Journaling ---
 @app.route('/journaling', methods=['GET', 'POST'])
 def journaling():
     user = session.get('user')
@@ -115,7 +120,7 @@ def delete_post(post_id):
     selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
     return redirect(url_for('journaling', date=selected_date))
 
-# Placeholder routes for other themes
+# --- Monkmode ---
 @app.route('/monk_mode')
 def monk_mode():
     user = session.get('user')
@@ -123,6 +128,7 @@ def monk_mode():
         return redirect(url_for('index'))
     return render_template('monk_mode.html', user=user)
 
+# --- Goals ---
 @app.route('/goals')
 def goals():
     user = session.get('user')
@@ -130,6 +136,7 @@ def goals():
         return redirect(url_for('index'))
     return render_template('goals.html', user=user)
 
+# --- Health ---
 @app.route('/health')
 def health():
     user = session.get('user')
@@ -137,6 +144,7 @@ def health():
         return redirect(url_for('index'))
     return render_template('health.html', user=user)
 
+# --- Finance ---
 @app.route('/finance')
 def finance():
     user = session.get('user')
