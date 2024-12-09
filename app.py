@@ -193,6 +193,45 @@ def health():
     food_items = Food.query.filter_by(user=user).all()
     return render_template('health.html', food_items=[item.to_dict() for item in food_items], user=user)
 
+@app.route('/edit_food', methods=['POST'])
+def edit_food():
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+
+    food_id = request.form['id']
+    food = Food.query.filter_by(id=food_id, user=user).first()
+    if food:
+        food.title = request.form['title']
+        food.description = request.form['description']
+        food.category = request.form['category']
+        food.kcal = request.form['kcal']
+        
+        # Check if a new image is uploaded
+        if 'image' in request.files and request.files['image']:
+            image_file = request.files['image']
+            image_filename = f"{datetime.now().timestamp()}_{image_file.filename}"
+            image_path = f"static/uploads/{image_filename}"
+            image_file.save(image_path)
+            food.image = image_path
+        
+        db.session.commit()
+
+    return redirect(url_for('health'))
+
+@app.route('/delete_food/<int:food_id>', methods=['POST'])
+def delete_food(food_id):
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+
+    food = Food.query.filter_by(id=food_id, user=user).first()
+    if food:
+        db.session.delete(food)
+        db.session.commit()
+
+    return redirect(url_for('health'))
+
 
 
 # --- Finance ---
