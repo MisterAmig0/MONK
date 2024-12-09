@@ -166,4 +166,29 @@ section {
     display: block; 
     margin: 0 auto; 
 }
-
+.pagination {
+    padding-bottom: 50px;
+}
+.pagination ul {
+    list-style: none;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0;
+}
+.pagination li {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.pagination li.active {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+.pagination li a {
+    text-decoration: none;
+    color: inherit;
+}
+.pagination li.active a {
+    color: white;
+}

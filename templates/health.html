@@ -168,6 +168,21 @@
         </div>
         {% endfor %}
     </div>
+    
+        <!-- Pagination Controls -->
+        <div class="pagination">
+            <ul>
+                {% for page_num in range(1, pagination.pages + 1) %}
+                <li class="{% if page_num == pagination.page %}active{% endif %}">
+                    <a href="{{ url_for('health', page=page_num, category=selected_category, search=search_query) }}">
+                        {{ page_num }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    
     </section>
     <script src="/static/js/modals/foodModal.js"></script>
     <script src="/static/js/foodFilter.js"></script>

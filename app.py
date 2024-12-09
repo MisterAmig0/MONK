@@ -166,6 +166,10 @@ def health():
     selected_category = request.args.get('category', '')
     search_query = request.args.get('search', '').strip()
 
+    # Pagination parameters
+    page = request.args.get('page', 1, type=int)  # Current page number
+    per_page = 4  # Number of items per page
+
     # Query food items for the logged-in user
     query = Food.query.filter_by(user=user)
     
@@ -177,7 +181,9 @@ def health():
     if search_query:
         query = query.filter(Food.title.ilike(f"%{search_query}%") | Food.description.ilike(f"%{search_query}%"))
 
-    food_items = query.all()
+    # Paginate the results
+    pagination = query.paginate(page=page, per_page=per_page)
+    food_items = pagination.items
 
     # Handle adding a new food item
     if request.method == 'POST' and 'title' in request.form:
@@ -233,8 +239,10 @@ def health():
         food_items=[item.to_dict() for item in food_items],
         user=user,
         selected_category=selected_category,
-        search_query=search_query
+        search_query=search_query,
+        pagination=pagination  # Pass pagination object to the template
     )
+
 
 
 @app.route('/edit_food', methods=['POST'])
