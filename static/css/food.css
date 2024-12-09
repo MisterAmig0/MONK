@@ -1,5 +1,34 @@
+section {
+    margin: 0px 20px;
+}
+
+/* Top section add Food */
+.moreFoodHeader, .filter-container {
+    display: flex;
+    justify-content: space-between;
+}
+.add-button-food {
+    background-color: transparent;
+    color: white;
+    font-size: 24px;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  .moreFoodHeader > .addFoodSection {
+    align-items: center;
+    margin: auto 0;
+}
+
+
+/* Create food item modal */
 .modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     z-index: 1;
     left: 0;
@@ -54,89 +83,42 @@
     font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
 
-/* Food Container Styles */
-.food-container {
+
+
+
+/* Search / Filter food */
+.filter-container {
     display: flex;
-    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
     justify-content: center;
-    margin: 20px auto;
-    max-width: 1200px;
-}
-
-.food-item {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin: 10px;
     padding: 10px;
-    width: 300px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
 }
 
-.food-item:hover {
-    transform: scale(1.05);
+/* Search Box Styling */
+.search-box {
+    display: flex;
+    align-items: center;
+    border: 1px dashed #555; /* Dashed border for the search box */
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #2c2c2c; /* Match the input background */
 }
 
-.food-item img {
-    max-width: 100%;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-.food-item h3 {
-    margin: 10px 0;
-    font-size: 20px;
-    color: #007bff;
-}
-
-.food-item p {
-    margin: 5px 0;
-    color: #555;
-}
-select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-    font-size: 16px;
-}
-
-select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-/* Filter Button */
-#filterBtn {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: #fff;
+#searchInput {
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #fff;
+    background-color: transparent;
+    width: 70vw;
 }
 
-#filterBtn:hover {
-    background-color: #0056b3;
+#searchInput:focus {
+    outline: none;
 }
 
-/* Popup Styles */
 .popup {
     display: none;
     position: fixed;
@@ -159,16 +141,10 @@ select:focus {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.popup-content h3 {
-    margin-bottom: 20px;
-    font-size: 20px;
-    color: #333;
-}
 
 .popup-content label {
     display: block;
     margin: 10px 0;
-    font-size: 16px;
     color: #555;
     cursor: pointer;
 }
@@ -177,20 +153,6 @@ select:focus {
     margin-right: 10px;
 }
 
-.popup-content button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.popup-content button:hover {
-    background-color: #218838;
-}
 
 /* Close Popup */
 .close-popup {
@@ -201,6 +163,55 @@ select:focus {
     color: #333;
 }
 
-.close-popup:hover {
-    color: #000;
+
+/* Filter Button Styling */
+.filter-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #555; /* Dashed border for the filter button */
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: #fff;
+    background-color: #2c2c2c; /* Match the button background */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
+
+.filter-button:hover {
+    background-color: #444; /* Slight hover effect */
+}
+
+
+/* Food Container Styles */
+.food-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+.food-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 10px;
+    padding: 10px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+
+.food-item img {
+    max-width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+
+
+
+  

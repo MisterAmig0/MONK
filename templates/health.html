@@ -9,64 +9,77 @@
 </head>
 <body>
 
-        <!-- Search Bar -->
-        <form id="searchForm" action="/health" method="GET" style="text-align: center; margin: 20px 0;">
-            <input 
-                type="text" 
-                name="search" 
-                id="searchInput" 
-                placeholder="Search food items..." 
-                value="{{ request.args.get('search', '') }}" 
-                style="padding: 10px; width: 300px; border: 1px solid #ccc; border-radius: 5px;">
-        </form>
-
-        <!-- Filter Button -->
-        <button id="filterBtn">Filter</button>
-
-        <!-- Filter Popup -->
-        <div id="filterPopup" class="popup">
-            <div class="popup-content">
-                <span class="close-popup">&times;</span>
-                <h3>Filter by Category</h3>
-                <form id="filterForm" action="/health" method="GET">
-                    <label>
-                        <input type="radio" name="category" value="Recepten" {% if selected_category == 'Recepten' %}checked{% endif %}> Recepten
-                    </label>
-                    <label>
-                        <input type="radio" name="category" value="Fruit" {% if selected_category == 'Fruit' %}checked{% endif %}> Fruit
-                    </label>
-                    <label>
-                        <input type="radio" name="category" value="Vlees" {% if selected_category == 'Vlees' %}checked{% endif %}> Vlees
-                    </label>
-                    <label>
-                        <input type="radio" name="category" value="Vis" {% if selected_category == 'Vis' %}checked{% endif %}> Vis
-                    </label>
-                    <label>
-                        <input type="radio" name="category" value="Groenten" {% if selected_category == 'Groenten' %}checked{% endif %}> Groenten
-                    </label>
-                    <label>
-                        <input type="radio" name="category" value="Koek" {% if selected_category == 'Koek' %}checked{% endif %}> Koek
-                    </label>
-                    <label>
-                        <input type="radio" name="category" value="Snoep" {% if selected_category == 'Snoep' %}checked{% endif %}> Snoep
-                    </label>
-                    <label>
-                        <input type="radio" name="category" value="Drankjes" {% if selected_category == 'Drankjes' %}checked{% endif %}> Drankjes
-                    </label>
-                    <label>
-                        <input type="radio" name="category" value="Overig" {% if selected_category == 'Overig' %}checked{% endif %}> Overig
-                    </label>
-                    <label>
-                        <input type="radio" name="category" value="" {% if selected_category == '' %}checked{% endif %}> All Categories
-                    </label>
-                    <button type="submit">Apply Filter</button>
-                </form>
-                
-            </div>
+    <section>
+    <!-- Add food -->
+    <div class="moreFoodHeader">
+        <div>
+            <span class="subtitle">More food</span>
+            <h1 class="title">Options</h1>
         </div>
+        <div class="addFoodSection">
+            <button class="add-button-food" id="addFoodBtn">+</button>
+        </div>
+    </div>
+    <div class="filter-container">
+        <!-- Search Bar -->
+        <form id="searchForm" action="/health" method="GET">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    name="search" 
+                    id="searchInput" 
+                    placeholder="Search by title, ingredients" 
+                    value="{{ request.args.get('search', '') }}" >
+            </div>
+        </form>
+    
+        <!-- Filter Button -->
+        <button id="filterBtn" class="filter-button">Filters</button>
+    </div>
+    
+    <!-- Filter Popup -->
+    <div id="filterPopup" class="popup">
+        <div class="popup-content">
+            <span class="close-popup">&times;</span>
+            <h3>Filter by Category</h3>
+            <form id="filterForm" action="/health" method="GET">
+                <label>
+                    <input type="radio" name="category" value="Recepten" {% if selected_category == 'Recepten' %}checked{% endif %}> Recepten
+                </label>
+                <label>
+                    <input type="radio" name="category" value="Fruit" {% if selected_category == 'Fruit' %}checked{% endif %}> Fruit
+                </label>
+                <label>
+                    <input type="radio" name="category" value="Vlees" {% if selected_category == 'Vlees' %}checked{% endif %}> Vlees
+                </label>
+                <label>
+                    <input type="radio" name="category" value="Vis" {% if selected_category == 'Vis' %}checked{% endif %}> Vis
+                </label>
+                <label>
+                    <input type="radio" name="category" value="Groenten" {% if selected_category == 'Groenten' %}checked{% endif %}> Groenten
+                </label>
+                <label>
+                    <input type="radio" name="category" value="Koek" {% if selected_category == 'Koek' %}checked{% endif %}> Koek
+                </label>
+                <label>
+                    <input type="radio" name="category" value="Snoep" {% if selected_category == 'Snoep' %}checked{% endif %}> Snoep
+                </label>
+                <label>
+                    <input type="radio" name="category" value="Drankjes" {% if selected_category == 'Drankjes' %}checked{% endif %}> Drankjes
+                </label>
+                <label>
+                    <input type="radio" name="category" value="Overig" {% if selected_category == 'Overig' %}checked{% endif %}> Overig
+                </label>
+                <label>
+                    <input type="radio" name="category" value="" {% if selected_category == '' %}checked{% endif %}> All Categories
+                </label>
+                <button type="submit">Apply Filter</button>
+            </form>
+            
+        </div>
+    </div>
 
 
-    <button id="addFoodBtn">Add Food</button>
 
     <div id="foodModal" class="modal">
         <div class="modal-content">
@@ -119,7 +132,7 @@
         </div>
         {% endfor %}
     </div>
-    
+
     <!-- Edit Modal -->
     <div id="editModal" class="modal">
         <div class="modal-content">
@@ -156,6 +169,7 @@
             </form>
         </div>
     </div>
+    </section>
     <script src="/static/js/modals/foodModal.js"></script>
     <script src="/static/js/foodFilter.js"></script>
 </body>
