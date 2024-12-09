@@ -12,7 +12,7 @@
 }
 
 .icon::before {
-  background-image: url('/static/images/Fingerprint.png');
+  background-image: url('/static/images/icons/Fingerprint.png');
 }
 
 .user-icon {
