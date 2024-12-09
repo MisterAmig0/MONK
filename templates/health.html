@@ -8,6 +8,52 @@
     <title>Health</title>
 </head>
 <body>
+            <!-- Filter Button -->
+        <button id="filterBtn">Filter</button>
+
+        <!-- Filter Popup -->
+        <div id="filterPopup" class="popup">
+            <div class="popup-content">
+                <span class="close-popup">&times;</span>
+                <h3>Filter by Category</h3>
+                <form id="filterForm" action="/health" method="GET">
+                    <label>
+                        <input type="radio" name="category" value="Recepten" {% if selected_category == 'Recepten' %}checked{% endif %}> Recepten
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="Fruit" {% if selected_category == 'Fruit' %}checked{% endif %}> Fruit
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="Vlees" {% if selected_category == 'Vlees' %}checked{% endif %}> Vlees
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="Vis" {% if selected_category == 'Vis' %}checked{% endif %}> Vis
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="Groenten" {% if selected_category == 'Groenten' %}checked{% endif %}> Groenten
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="Koek" {% if selected_category == 'Koek' %}checked{% endif %}> Koek
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="Snoep" {% if selected_category == 'Snoep' %}checked{% endif %}> Snoep
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="Drankjes" {% if selected_category == 'Drankjes' %}checked{% endif %}> Drankjes
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="Overig" {% if selected_category == 'Overig' %}checked{% endif %}> Overig
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="" {% if selected_category == '' %}checked{% endif %}> All Categories
+                    </label>
+                    <button type="submit">Apply Filter</button>
+                </form>
+                
+            </div>
+        </div>
+
+
     <button id="addFoodBtn">Add Food</button>
 
     <div id="foodModal" class="modal">
@@ -101,3 +147,26 @@
     <script src="/static/js/modals/foodModal.js"></script>
 </body>
 </html>
+
+<script>
+    const filterBtn = document.getElementById('filterBtn');
+    const filterPopup = document.getElementById('filterPopup');
+    const closePopup = document.querySelector('.close-popup');
+
+    // Open the filter popup
+    filterBtn.addEventListener('click', () => {
+        filterPopup.style.display = 'block';
+    });
+
+    // Close the filter popup
+    closePopup.addEventListener('click', () => {
+        filterPopup.style.display = 'none';
+    });
+
+    // Close the popup when clicking outside of it
+    window.addEventListener('click', event => {
+        if (event.target == filterPopup) {
+            filterPopup.style.display = 'none';
+        }
+    });
+</script>

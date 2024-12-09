@@ -156,14 +156,17 @@ def goals():
     return render_template('goals.html', user=user)
 
 # --- Health ---
-# --- Health ---
 @app.route('/health', methods=['GET', 'POST'])
 def health():
     user = session.get('user')
     if not user:
         return redirect(url_for('index'))
 
-    if request.method == 'POST':
+    # Handle filtering
+    selected_category = request.args.get('category', '')
+
+    # Handle adding a new food item
+    if request.method == 'POST' and 'title' in request.form:
         title = request.form['title']
         description = request.form['description']
         category = request.form['category']
@@ -188,10 +191,42 @@ def health():
         )
         db.session.add(new_food)
         db.session.commit()
+        return redirect(url_for('health'))
 
-    # Fetch all food items for the logged-in user
-    food_items = Food.query.filter_by(user=user).all()
-    return render_template('health.html', food_items=[item.to_dict() for item in food_items], user=user)
+    # Handle editing a food item
+    if request.method == 'POST' and 'id' in request.form:
+        food_id = request.form['id']
+        food = Food.query.filter_by(id=food_id, user=user).first()
+        if food:
+            food.title = request.form['title']
+            food.description = request.form['description']
+            food.category = request.form['category']
+            food.kcal = request.form['kcal']
+            
+            # Check if a new image is uploaded
+            if 'image' in request.files and request.files['image']:
+                image_file = request.files['image']
+                image_filename = f"{datetime.now().timestamp()}_{image_file.filename}"
+                image_path = f"static/uploads/{image_filename}"
+                image_file.save(image_path)
+                food.image = image_path
+            
+            db.session.commit()
+            return redirect(url_for('health'))
+
+    # Handle filtering food items
+    if selected_category:
+        food_items = Food.query.filter_by(user=user, category=selected_category).all()
+    else:
+        food_items = Food.query.filter_by(user=user).all()
+
+    return render_template(
+        'health.html',
+        food_items=[item.to_dict() for item in food_items],
+        user=user,
+        selected_category=selected_category
+    )
+
 
 @app.route('/edit_food', methods=['POST'])
 def edit_food():
