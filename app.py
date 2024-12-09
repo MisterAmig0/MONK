@@ -162,8 +162,22 @@ def health():
     if not user:
         return redirect(url_for('index'))
 
-    # Handle filtering
+    # Handle filtering and search
     selected_category = request.args.get('category', '')
+    search_query = request.args.get('search', '').strip()
+
+    # Query food items for the logged-in user
+    query = Food.query.filter_by(user=user)
+    
+    # Apply category filter if selected
+    if selected_category:
+        query = query.filter_by(category=selected_category)
+
+    # Apply search filter if a search query is provided
+    if search_query:
+        query = query.filter(Food.title.ilike(f"%{search_query}%") | Food.description.ilike(f"%{search_query}%"))
+
+    food_items = query.all()
 
     # Handle adding a new food item
     if request.method == 'POST' and 'title' in request.form:
@@ -214,17 +228,12 @@ def health():
             db.session.commit()
             return redirect(url_for('health'))
 
-    # Handle filtering food items
-    if selected_category:
-        food_items = Food.query.filter_by(user=user, category=selected_category).all()
-    else:
-        food_items = Food.query.filter_by(user=user).all()
-
     return render_template(
         'health.html',
         food_items=[item.to_dict() for item in food_items],
         user=user,
-        selected_category=selected_category
+        selected_category=selected_category,
+        search_query=search_query
     )
 
 

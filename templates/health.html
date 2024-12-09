@@ -8,7 +8,19 @@
     <title>Health</title>
 </head>
 <body>
-            <!-- Filter Button -->
+
+        <!-- Search Bar -->
+        <form id="searchForm" action="/health" method="GET" style="text-align: center; margin: 20px 0;">
+            <input 
+                type="text" 
+                name="search" 
+                id="searchInput" 
+                placeholder="Search food items..." 
+                value="{{ request.args.get('search', '') }}" 
+                style="padding: 10px; width: 300px; border: 1px solid #ccc; border-radius: 5px;">
+        </form>
+
+        <!-- Filter Button -->
         <button id="filterBtn">Filter</button>
 
         <!-- Filter Popup -->
@@ -145,28 +157,6 @@
         </div>
     </div>
     <script src="/static/js/modals/foodModal.js"></script>
+    <script src="/static/js/foodFilter.js"></script>
 </body>
 </html>
-
-<script>
-    const filterBtn = document.getElementById('filterBtn');
-    const filterPopup = document.getElementById('filterPopup');
-    const closePopup = document.querySelector('.close-popup');
-
-    // Open the filter popup
-    filterBtn.addEventListener('click', () => {
-        filterPopup.style.display = 'block';
-    });
-
-    // Close the filter popup
-    closePopup.addEventListener('click', () => {
-        filterPopup.style.display = 'none';
-    });
-
-    // Close the popup when clicking outside of it
-    window.addEventListener('click', event => {
-        if (event.target == filterPopup) {
-            filterPopup.style.display = 'none';
-        }
-    });
-</script>
