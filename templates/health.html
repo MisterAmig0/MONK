@@ -4,9 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/style.css">
-    <title>Monk - Health</title>
+    <link rel="stylesheet" href="/static/css/food.css">
+    <title>Health</title>
 </head>
 <body>
-    
+    <button id="addFoodBtn">Add Food</button>
+
+    <div id="foodModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form action="/health" method="POST" enctype="multipart/form-data">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+                
+                <label for="description">Description / Recipe:</label>
+                <textarea id="description" name="description" required></textarea>
+                
+                <label for="category">Category:</label>
+                <input type="text" id="category" name="category" required>
+                
+                <label for="kcal">KCal:</label>
+                <input type="number" id="kcal" name="kcal" required>
+                
+                <label for="image">Image:</label>
+                <input type="file" id="image" name="image" accept="image/*">
+                
+                <button type="submit">Add Food</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="food-container">
+        {% for food in food_items %}
+        <div class="food-item">
+            {% if food.image %}
+            <img src="{{ food.image }}" alt="{{ food.title }}" class="food-image">
+            {% endif %}
+            <h3>{{ food.title }}</h3>
+            <p>Category: {{ food.category }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script src="/static/js/modals/foodModal.js"></script>
 </body>
 </html>

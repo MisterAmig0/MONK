@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 # --- Database configuration--
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///journaling.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app_data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize the database
@@ -32,6 +32,25 @@ class Post(db.Model):
             "question2": self.question2,
             "question3": self.question3,
             "question4": self.question4,
+        }
+    
+class Food(db.Model):  # Define a model for food items
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(50), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    kcal = db.Column(db.Integer, nullable=False)
+    image = db.Column(db.String(100), nullable=True)  # Store image file path
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "category": self.category,
+            "kcal": self.kcal,
+            "image": self.image,
         }
 
 # --- Login ---
@@ -137,12 +156,44 @@ def goals():
     return render_template('goals.html', user=user)
 
 # --- Health ---
-@app.route('/health')
+# --- Health ---
+@app.route('/health', methods=['GET', 'POST'])
 def health():
     user = session.get('user')
     if not user:
         return redirect(url_for('index'))
-    return render_template('health.html', user=user)
+
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form['description']
+        category = request.form['category']
+        kcal = request.form['kcal']
+        image_file = request.files['image']
+
+        # Save the image file to a static directory
+        image_path = None
+        if image_file:
+            image_filename = f"{datetime.now().timestamp()}_{image_file.filename}"
+            image_path = f"static/uploads/{image_filename}"
+            image_file.save(image_path)
+
+        # Create a new food item
+        new_food = Food(
+            user=user,
+            title=title,
+            description=description,
+            category=category,
+            kcal=kcal,
+            image=image_path
+        )
+        db.session.add(new_food)
+        db.session.commit()
+
+    # Fetch all food items for the logged-in user
+    food_items = Food.query.filter_by(user=user).all()
+    return render_template('health.html', food_items=[item.to_dict() for item in food_items], user=user)
+
+
 
 # --- Finance ---
 @app.route('/finance')
