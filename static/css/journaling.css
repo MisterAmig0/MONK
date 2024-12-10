@@ -73,16 +73,7 @@
     position: relative;
 }
 
-.date-button:hover {
-    border: 2px solid rgba(255, 255, 255, 0.8);
-}
 
-.date-button.active {
-    background: linear-gradient(135deg, #ff7eb3, #765df6);
-    color: white;
-    border: none;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
-}
 
 .date-button.active::after {
     content: '';
@@ -92,13 +83,21 @@
     right: -5px;
     bottom: -5px;
     border-radius: 50%;
-    border: 2px solid transparent;
     background: linear-gradient(135deg, #ff7eb3, #765df6);
-    -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
-    mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: destination-out;
+    padding: 5px; /* Thickness of the gradient border */
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
     mask-composite: exclude;
     z-index: -1;
+}
+
+.date-button.active {
+    background: linear-gradient(135deg, #ff7eb3, #765df6);
+    color: white; /* For supported browsers with active gradient text */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 textarea {
