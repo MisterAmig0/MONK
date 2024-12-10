@@ -11,10 +11,10 @@
     <div class="navigaton-header">
         <div class="user-icon">
             <a href="{{ url_for('select_theme') }}">
-                <div class="select-user-icon back-button"></div>
+                <div class="icon  back-button"></div>
             </a>
             <a href="{{ url_for('select_user', username='Sam') }}">
-                <div class="select-user-icon"></div>
+                <div class="icon"></div>
             </a>
         </div>
     </div>
@@ -50,6 +50,30 @@
                 </button>
             </form>
         </div>     
+
+        <div class="stats-container">
+            <div class="stat-item border-right-item">
+                <p>Entries this year</p>
+                <div class="stat-icon">
+                    <img src="#" alt="#">
+                    <p>Test</p>
+                </div>
+            </div>
+            <div class="stat-item border-right-item">
+                <p>Entries this year</p>
+                <div class="stat-icon">
+                    <img src="#" alt="#">
+                    <p>Test</p>
+                </div>    
+            </div>
+            <div class="stat-item">
+                <p>Entries this year</p>
+                <div class="stat-icon">
+                    <img src="#" alt="#">
+                    <p>Test</p>
+                </div>
+            </div>
+        </div>
 
     <!-- Button to create a new post -->
     <button id="openModal" class="circle-button">

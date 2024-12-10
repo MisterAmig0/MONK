@@ -118,6 +118,18 @@ textarea {
     margin: 20px 0px;
 }
 
+/* Stats design */
+.stats-container {
+    display: flex;
+    gap: 10px;
+}
+.border-right-item {
+    border-right: 2px solid black;
+}
+.stat-icon {
+    display: flex;
+}
+
 /* Styling for the post */
 .post-container {
     border-radius: 7px;
@@ -185,3 +197,7 @@ textarea {
         padding: 15px;
     }
 }
+
+
+
+
