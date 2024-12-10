@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Half-Circle Progress Bar</title>
+  <style>
+
+    .progress-container {
+      position: relative;
+      width: 300px;
+      height: 150px;
+      overflow: hidden;
+    }
+
+    .progress-circle {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: transparent;
+    }
+
+    .circle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      clip-path: circle(50%);
+      transform: rotate(180deg); /* Start from top */
+    }
+
+    .mask {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      clip-path: circle(50%);
+      background: none;
+    }
+
+    .mask.full {
+      background-color: #000; /* Default background */
+    }
+
+    .mask.half .fill {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, red, red);
+      clip-path: circle(50%);
+      transform: rotate(0deg); /* Initial state */
+    }
+
+    .inside-circle {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      background: #181818;
+      border-radius: 50%;
+      top: 40px;
+      left: 40px;
+    }
+
+    .input-container {
+      margin-top: 20px;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-container">
+    <div class="progress-circle">
+      <div class="circle">
+        <div class="mask full" id="maskFull"></div>
+        <div class="mask half">
+          <div class="fill" id="fill"></div>
+        </div>
+        <div class="inside-circle"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-container">
+    <label for="progressInput">Set Progress (0-100):</label>
+    <input type="number" id="progressInput" min="0" max="100" value="0">
+    <button onclick="updateProgress()">Update</button>
+  </div>
+
+  <script>
+    function updateProgress() {
+      const input = document.getElementById('progressInput').value;
+      const progress = Math.min(100, Math.max(0, parseInt(input))); // Clamp value between 0 and 100
+
+      const fill = document.getElementById('fill');
+
+      // Calculate rotation angle based on progress percentage
+      const rotation = (progress / 100) * 180; // Half-circle corresponds to 180 degrees
+
+      // Rotate the fill element to reflect progress
+      fill.style.transform = `rotate(${rotation}deg)`;
+    }
+  </script>
+</body>
+</html>
+
+<style>
+/* styles.css */
+body {
+  margin: 0;
+  background-color: #181818;
+
+}
+
+.progress-container {
+  position: relative;
+  width: 300px; /* Full width of the circle */
+  height: 150px; /* Half-circle height */
+  top: 100px;
+  left: -20vw;
+  overflow: hidden;
+  transform: rotate(90deg); /* Turn the progress bar upside down */
+}
+
+.progress-circle {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: conic-gradient(
+    rgba(255, 255, 255, 0.1) 0deg,
+    rgba(255, 255, 255, 0.1) 180deg,
+    transparent 180deg,
+    transparent 360deg
+  );
+}
+
+.circle {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  clip-path: circle(50%);
+  transform: rotate(-90deg); /* Keep progress starting from the bottom */
+}
+
+.mask {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  clip-path: circle(50%);
+  background: none;
+}
+
+.mask.full {
+  background-color: #000;
+}
+
+.mask.half .fill {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #ff00c3, #ff5e66);
+  clip-path: circle(50%);
+}
+
+.inside-circle {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  background: #181818;
+  border-radius: 50%;
+  top: 40px;
+  left: 40px;
+}
+
+</style>
