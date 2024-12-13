@@ -22,6 +22,35 @@
     </div>
 
     <section>
+        <div class="water-tracker">
+            <h2>Water Consumption</h2>
+            <p>Set your daily water intake goal and track your progress.</p>
+    
+            <div class="water-status">
+                <h3>Goal: <span id="water-goal">{{ water_goal }} ml</span></h3>
+                <h3>Total Consumed: <span id="water-total">{{ total_water }} ml</span></h3>
+                <h3>Progress: <span id="water-percentage">{{ percentage }}%</span></h3>
+                <h3>Remaining: <span id="water-remaining">{{ remaining_ml }} ml</span></h3>
+            </div>
+    
+            <!-- Update Goal -->
+            <form action="/health" method="POST" class="water-goal-form">
+                <label for="water_goal">Set Goal (ml):</label>
+                <input type="number" id="water_goal" name="water_goal" placeholder="e.g., 2500" required>
+                <button type="submit">Update Goal</button>
+            </form>
+    
+            <!-- Add Water -->
+            <form action="/health" method="POST" class="water-add-form">
+                <label for="water_amount">Add Water (ml):</label>
+                <input type="number" id="water_amount" name="water_amount" placeholder="e.g., 250" required>
+                <button type="submit">Add</button>
+            </form>
+        </div>
+    </section>
+    
+
+    <section>
     <!-- Add food -->
     <div class="moreFoodHeader">
         <div>

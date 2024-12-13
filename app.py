@@ -52,6 +52,21 @@ class Food(db.Model):  # Define a model for food items
             "kcal": self.kcal,
             "image": self.image,
         }
+class Water(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(50), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    consumption_ml = db.Column(db.Integer, nullable=False)
+    goal_ml = db.Column(db.Integer, nullable=True)  # Allow goal to be null initially
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "date": self.date.isoformat(),
+            "consumption_ml": self.consumption_ml,
+            "goal_ml": self.goal_ml,
+        }
+
 
 # --- Login ---
 @app.route('/')
@@ -162,77 +177,52 @@ def health():
     if not user:
         return redirect(url_for('index'))
 
-    # Handle filtering and search
-    selected_category = request.args.get('category', '')
-    search_query = request.args.get('search', '').strip()
+    today = datetime.today().date()
 
-    # Pagination parameters
-    page = request.args.get('page', 1, type=int)  # Current page number
-    per_page = 4  # Number of items per page
+    # Fetch water data
+    water_entry = Water.query.filter_by(user=user, date=today).first()
+    total_water = water_entry.consumption_ml if water_entry else 0
+    water_goal = water_entry.goal_ml if water_entry else 2000  # Default goal of 2000 ml
 
-    # Query food items for the logged-in user
-    query = Food.query.filter_by(user=user)
-    
-    # Apply category filter if selected
-    if selected_category:
-        query = query.filter_by(category=selected_category)
+    # Handle water goal and consumption updates
+    if request.method == 'POST':
+        if 'water_goal' in request.form:  # Update the goal
+            water_goal = int(request.form['water_goal'])
+            if water_entry:
+                water_entry.goal_ml = water_goal
+            else:
+                water_entry = Water(user=user, date=today, consumption_ml=0, goal_ml=water_goal)
+                db.session.add(water_entry)
 
-    # Apply search filter if a search query is provided
-    if search_query:
-        query = query.filter(Food.title.ilike(f"%{search_query}%") | Food.description.ilike(f"%{search_query}%"))
+        if 'water_amount' in request.form:  # Update consumption
+            water_amount = int(request.form['water_amount'])
+            if water_entry:
+                water_entry.consumption_ml += water_amount
+            else:
+                water_entry = Water(user=user, date=today, consumption_ml=water_amount, goal_ml=water_goal)
+                db.session.add(water_entry)
 
-    # Paginate the results
-    pagination = query.paginate(page=page, per_page=per_page)
-    food_items = pagination.items
-
-    # Handle adding a new food item
-    if request.method == 'POST' and 'title' in request.form:
-        title = request.form['title']
-        description = request.form['description']
-        category = request.form['category']
-        kcal = request.form['kcal']
-        image_file = request.files['image']
-
-        # Save the image file to a static directory
-        image_path = None
-        if image_file:
-            image_filename = f"{datetime.now().timestamp()}_{image_file.filename}"
-            image_path = f"static/uploads/{image_filename}"
-            image_file.save(image_path)
-
-        # Create a new food item
-        new_food = Food(
-            user=user,
-            title=title,
-            description=description,
-            category=category,
-            kcal=kcal,
-            image=image_path
-        )
-        db.session.add(new_food)
         db.session.commit()
         return redirect(url_for('health'))
 
-    # Handle editing a food item
-    if request.method == 'POST' and 'id' in request.form:
-        food_id = request.form['id']
-        food = Food.query.filter_by(id=food_id, user=user).first()
-        if food:
-            food.title = request.form['title']
-            food.description = request.form['description']
-            food.category = request.form['category']
-            food.kcal = request.form['kcal']
-            
-            # Check if a new image is uploaded
-            if 'image' in request.files and request.files['image']:
-                image_file = request.files['image']
-                image_filename = f"{datetime.now().timestamp()}_{image_file.filename}"
-                image_path = f"static/uploads/{image_filename}"
-                image_file.save(image_path)
-                food.image = image_path
-            
-            db.session.commit()
-            return redirect(url_for('health'))
+    # Calculate progress
+    percentage = (total_water / water_goal) * 100 if water_goal > 0 else 0
+    remaining_ml = max(water_goal - total_water, 0)
+
+    # Fetch food data (existing logic unchanged)
+    selected_category = request.args.get('category', '')
+    search_query = request.args.get('search', '').strip()
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
+    query = Food.query.filter_by(user=user)
+
+    if selected_category:
+        query = query.filter_by(category=selected_category)
+    if search_query:
+        query = query.filter(Food.title.ilike(f"%{search_query}%") | Food.description.ilike(f"%{search_query}%"))
+
+    pagination = query.paginate(page=page, per_page=per_page)
+    food_items = pagination.items
 
     return render_template(
         'health.html',
@@ -240,8 +230,38 @@ def health():
         user=user,
         selected_category=selected_category,
         search_query=search_query,
-        pagination=pagination  # Pass pagination object to the template
+        pagination=pagination,
+        total_water=total_water,
+        water_goal=water_goal,
+        percentage=round(percentage, 2),
+        remaining_ml=remaining_ml
     )
+
+
+@app.route('/water', methods=['GET', 'POST'])
+def water():
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+
+    today = datetime.today().date()
+    water_entry = Water.query.filter_by(user=user, date=today).first()
+
+    if request.method == 'POST':
+        water_amount = int(request.form['water_amount'])
+
+        if water_entry:
+            water_entry.consumption_ml += water_amount
+        else:
+            water_entry = Water(user=user, date=today, consumption_ml=water_amount)
+            db.session.add(water_entry)
+
+        db.session.commit()
+        return redirect(url_for('water'))
+
+    total_consumption = water_entry.consumption_ml if water_entry else 0
+    return render_template('water.html', total_consumption=total_consumption, user=user)
+
 
 
 
