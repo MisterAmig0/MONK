@@ -66,6 +66,24 @@ class Water(db.Model):
             "consumption_ml": self.consumption_ml,
             "goal_ml": self.goal_ml,
         }
+    
+class Sleep(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(50), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    sleep_goal_hours = db.Column(db.Float, nullable=True)  # Goal in hours
+    bedtime = db.Column(db.Time, nullable=True)  # Time the user went to bed
+    wake_time = db.Column(db.Time, nullable=True)  # Time the user woke up
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "date": self.date.isoformat(),
+            "sleep_goal_hours": self.sleep_goal_hours,
+            "bedtime": self.bedtime.strftime('%H:%M') if self.bedtime else None,
+            "wake_time": self.wake_time.strftime('%H:%M') if self.wake_time else None,
+        }
+
 
 
 # --- Login ---
@@ -182,11 +200,11 @@ def health():
     # Fetch water data
     water_entry = Water.query.filter_by(user=user, date=today).first()
     total_water = water_entry.consumption_ml if water_entry else 0
-    water_goal = water_entry.goal_ml if water_entry else 2000  # Default goal of 2000 ml
+    water_goal = water_entry.goal_ml if water_entry else 2000  # Default goal: 2000 ml
 
     # Handle water goal and consumption updates
     if request.method == 'POST':
-        if 'water_goal' in request.form:  # Update the goal
+        if 'water_goal' in request.form:  # Update water goal
             water_goal = int(request.form['water_goal'])
             if water_entry:
                 water_entry.goal_ml = water_goal
@@ -194,7 +212,7 @@ def health():
                 water_entry = Water(user=user, date=today, consumption_ml=0, goal_ml=water_goal)
                 db.session.add(water_entry)
 
-        if 'water_amount' in request.form:  # Update consumption
+        if 'water_amount' in request.form:  # Update water consumption
             water_amount = int(request.form['water_amount'])
             if water_entry:
                 water_entry.consumption_ml += water_amount
@@ -202,14 +220,53 @@ def health():
                 water_entry = Water(user=user, date=today, consumption_ml=water_amount, goal_ml=water_goal)
                 db.session.add(water_entry)
 
+        # Handle sleep tracking updates
+        if 'sleep_goal' in request.form:  # Update sleep goal
+            sleep_goal = float(request.form.get('sleep_goal'))
+            sleep_entry = Sleep.query.filter_by(user=user, date=today).first()
+            if sleep_entry:
+                sleep_entry.sleep_goal_hours = sleep_goal
+            else:
+                sleep_entry = Sleep(user=user, date=today, sleep_goal_hours=sleep_goal)
+                db.session.add(sleep_entry)
+
+        if 'bedtime' in request.form and 'wake_time' in request.form:  # Update sleep times
+            bedtime = request.form.get('bedtime')
+            wake_time = request.form.get('wake_time')
+            sleep_entry = Sleep.query.filter_by(user=user, date=today).first()
+            if sleep_entry:
+                sleep_entry.bedtime = datetime.strptime(bedtime, '%H:%M').time()
+                sleep_entry.wake_time = datetime.strptime(wake_time, '%H:%M').time()
+            else:
+                sleep_entry = Sleep(
+                    user=user,
+                    date=today,
+                    bedtime=datetime.strptime(bedtime, '%H:%M').time(),
+                    wake_time=datetime.strptime(wake_time, '%H:%M').time(),
+                )
+                db.session.add(sleep_entry)
+
         db.session.commit()
         return redirect(url_for('health'))
 
-    # Calculate progress
+    # Calculate progress for water tracking
     percentage = (total_water / water_goal) * 100 if water_goal > 0 else 0
     remaining_ml = max(water_goal - total_water, 0)
 
-    # Fetch food data (existing logic unchanged)
+    # Fetch sleep data
+    sleep_entry = Sleep.query.filter_by(user=user, date=today).first()
+    sleep_goal_hours = sleep_entry.sleep_goal_hours if sleep_entry else 8  # Default goal: 8 hours
+    sleep_duration = None
+    sleep_percentage = None
+    if sleep_entry and sleep_entry.bedtime and sleep_entry.wake_time:
+        bedtime_datetime = datetime.combine(today, sleep_entry.bedtime)
+        wake_time_datetime = datetime.combine(today, sleep_entry.wake_time)
+        if wake_time_datetime < bedtime_datetime:  # Handle overnight sleep
+            wake_time_datetime += timedelta(days=1)
+        sleep_duration = (wake_time_datetime - bedtime_datetime).total_seconds() / 3600
+        sleep_percentage = (sleep_duration / sleep_goal_hours) * 100 if sleep_goal_hours > 0 else 0
+
+    # Fetch food data
     selected_category = request.args.get('category', '')
     search_query = request.args.get('search', '').strip()
     page = request.args.get('page', 1, type=int)
@@ -234,7 +291,10 @@ def health():
         total_water=total_water,
         water_goal=water_goal,
         percentage=round(percentage, 2),
-        remaining_ml=remaining_ml
+        remaining_ml=remaining_ml,
+        sleep_goal_hours=sleep_goal_hours,
+        sleep_duration=round(sleep_duration, 2) if sleep_duration else None,
+        sleep_percentage=round(sleep_percentage, 2) if sleep_percentage else None,
     )
 
 
@@ -261,6 +321,8 @@ def water():
 
     total_consumption = water_entry.consumption_ml if water_entry else 0
     return render_template('water.html', total_consumption=total_consumption, user=user)
+
+
 
 
 

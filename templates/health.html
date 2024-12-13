@@ -48,6 +48,50 @@
             </form>
         </div>
     </section>
+
+    <section>
+        <div class="sleep-tracker">
+            <h2>Sleep Tracking</h2>
+            <p>Set your daily sleep goal and track your sleep duration.</p>
+            
+            <div class="sleep-status">
+                <h3>Sleep Goal: <span id="sleep-goal">{{ sleep_goal_hours }} hours</span></h3>
+                <h3>Sleep Duration: 
+                    {% if sleep_duration %}
+                    <span id="sleep-duration">{{ sleep_duration }} hours</span>
+                    {% else %}
+                    <span id="sleep-duration">Not recorded yet</span>
+                    {% endif %}
+                </h3>
+                <h3>Progress: 
+                    {% if sleep_percentage %}
+                    <span id="sleep-percentage">{{ sleep_percentage }}%</span>
+                    {% else %}
+                    <span id="sleep-percentage">0%</span>
+                    {% endif %}
+                </h3>
+            </div>
+            
+            <!-- Update Sleep Goal -->
+            <form action="/health" method="POST" class="sleep-goal-form">
+                <label for="sleep_goal">Set Sleep Goal (hours):</label>
+                <input type="number" id="sleep_goal" name="sleep_goal" placeholder="e.g., 8" step="0.5" required>
+                <button type="submit">Update Goal</button>
+            </form>
+            
+            <!-- Record Sleep Times -->
+            <form action="/health" method="POST" class="sleep-times-form">
+                <label for="bedtime">Bedtime:</label>
+                <input type="time" id="bedtime" name="bedtime" required>
+                
+                <label for="wake_time">Wake Time:</label>
+                <input type="time" id="wake_time" name="wake_time" required>
+                
+                <button type="submit">Record Sleep</button>
+            </form>
+        </div>
+    </section>
+    
     
 
     <section>

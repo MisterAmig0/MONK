@@ -243,3 +243,48 @@ section {
 .water-tracker button:hover {
     background: #004d40;
 }
+
+.sleep-tracker {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.sleep-status {
+    margin-bottom: 15px;
+}
+
+.sleep-status h3 {
+    margin: 5px 0;
+}
+
+.sleep-goal-form,
+.sleep-times-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sleep-goal-form input,
+.sleep-times-form input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.sleep-goal-form button,
+.sleep-times-form button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.sleep-goal-form button:hover,
+.sleep-times-form button:hover {
+    background-color: #45a049;
+}
