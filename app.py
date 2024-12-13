@@ -204,6 +204,7 @@ def health():
 
     # Handle water goal and consumption updates
     if request.method == 'POST':
+        # Handle water tracking
         if 'water_goal' in request.form:  # Update water goal
             water_goal = int(request.form['water_goal'])
             if water_entry:
@@ -220,7 +221,7 @@ def health():
                 water_entry = Water(user=user, date=today, consumption_ml=water_amount, goal_ml=water_goal)
                 db.session.add(water_entry)
 
-        # Handle sleep tracking updates
+        # Handle sleep tracking
         if 'sleep_goal' in request.form:  # Update sleep goal
             sleep_goal = float(request.form.get('sleep_goal'))
             sleep_entry = Sleep.query.filter_by(user=user, date=today).first()
@@ -245,6 +246,32 @@ def health():
                     wake_time=datetime.strptime(wake_time, '%H:%M').time(),
                 )
                 db.session.add(sleep_entry)
+
+        # Handle food submissions
+        if 'title' in request.form:  # Add new food
+            title = request.form['title']
+            description = request.form['description']
+            category = request.form['category']
+            kcal = int(request.form['kcal'])
+            
+            # Handle image upload
+            image_file = request.files['image'] if 'image' in request.files else None
+            image_path = None
+            if image_file:
+                image_filename = f"{datetime.now().timestamp()}_{image_file.filename}"
+                image_path = f"static/uploads/{image_filename}"
+                image_file.save(image_path)
+
+            # Create a new food entry
+            new_food = Food(
+                user=user,
+                title=title,
+                description=description,
+                category=category,
+                kcal=kcal,
+                image=image_path,
+            )
+            db.session.add(new_food)
 
         db.session.commit()
         return redirect(url_for('health'))
@@ -296,6 +323,7 @@ def health():
         sleep_duration=round(sleep_duration, 2) if sleep_duration else None,
         sleep_percentage=round(sleep_percentage, 2) if sleep_percentage else None,
     )
+
 
 
 @app.route('/water', methods=['GET', 'POST'])

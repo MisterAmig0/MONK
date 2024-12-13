@@ -181,7 +181,7 @@ section {
     border-radius: 5px;
 }
 .pagination li.active {
-    background-color: #007bff;
+    background-color: white;
     color: white;
     border: none;
 }
@@ -194,25 +194,19 @@ section {
 }
 
 
-.water-tracker {
-    margin-top: 20px;
-    padding: 20px;
-    background: #e0f7fa;
-    border-radius: 10px;
-    text-align: center;
-}
+
 
 .water-tracker h2 {
     margin-bottom: 10px;
     font-size: 24px;
-    color: #00796b;
+    color: white;
 }
 
 .water-tracker .water-status {
     margin-bottom: 20px;
     font-size: 18px;
     font-weight: bold;
-    color: #004d40;
+    color: white;
 }
 
 .water-tracker form {
@@ -227,38 +221,15 @@ section {
     margin-bottom: 10px;
     width: 120px;
     text-align: center;
-    border: 1px solid #00796b;
+    border: 1px solid white;
     border-radius: 5px;
 }
 
-.water-tracker button {
-    padding: 10px 20px;
-    background: #00796b;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.water-tracker button:hover {
-    background: #004d40;
-}
-
-.sleep-tracker {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    margin: 20px 0;
-}
 
 .sleep-status {
     margin-bottom: 15px;
 }
 
-.sleep-status h3 {
-    margin: 5px 0;
-}
 
 .sleep-goal-form,
 .sleep-times-form {
@@ -270,21 +241,7 @@ section {
 .sleep-goal-form input,
 .sleep-times-form input {
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid white;
     border-radius: 5px;
 }
 
-.sleep-goal-form button,
-.sleep-times-form button {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.sleep-goal-form button:hover,
-.sleep-times-form button:hover {
-    background-color: #45a049;
-}
