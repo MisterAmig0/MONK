@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/journaling.css">
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/food.css">
     <link rel="icon" type="image/x-icon" href="/static/images/logo/favicon.png">
@@ -21,6 +22,38 @@
         </div>
     </div>
 
+    <div class="date-header">
+        <p>{{ selected_date }}</p>
+        <h2>Health Tracking</h2>
+    </div>
+
+    <!-- Date Selector -->
+    <div id="dateCarousel" class="carousel-container">
+        <div class="carousel-dates">
+            {% for offset in range(-1, 6) %}
+            {% set current_date = (selected_date + timedelta(days=offset)) %}
+            <form method="get" action="/health" class="carousel-item">
+                <input type="hidden" name="date" value="{{ current_date }}">
+                <button 
+                    type="submit" 
+                    class="date-button {% if current_date == selected_date %}active{% endif %}">
+                    {{ current_date.strftime('%d') }}
+                </button>
+            </form>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Go to Current Date Button -->
+    <div class="go-to-current">
+        <form method="get" action="/health">
+            <input type="hidden" name="date" value="{{ datetime.today().strftime('%Y-%m-%d') }}">
+            <button type="submit" class="current-date-button">
+                Go to Current Date
+            </button>
+        </form>
+    </div>
+
     <section>
         <div class="water-tracker">
             <h2>Water Consumption</h2>
@@ -34,14 +67,14 @@
             </div>
     
             <!-- Update Goal -->
-            <form action="/health" method="POST" class="water-goal-form">
+            <form action="/health?date={{ selected_date }}" method="POST" class="water-goal-form">
                 <label for="water_goal">Set Goal (ml):</label>
                 <input type="number" id="water_goal" name="water_goal" placeholder="e.g., 2500" required>
                 <button type="submit">Update Goal</button>
             </form>
     
             <!-- Add Water -->
-            <form action="/health" method="POST" class="water-add-form">
+            <form action="/health?date={{ selected_date }}" method="POST" class="water-add-form">
                 <label for="water_amount">Add Water (ml):</label>
                 <input type="number" id="water_amount" name="water_amount" placeholder="e.g., 250" required>
                 <button type="submit">Add</button>
@@ -73,14 +106,14 @@
             </div>
             
             <!-- Update Sleep Goal -->
-            <form action="/health" method="POST" class="sleep-goal-form">
+            <form action="/health?date={{ selected_date }}" method="POST" class="sleep-goal-form">
                 <label for="sleep_goal">Set Sleep Goal (hours):</label>
                 <input type="number" id="sleep_goal" name="sleep_goal" placeholder="e.g., 8" step="0.5" required>
                 <button type="submit">Update Goal</button>
             </form>
             
             <!-- Record Sleep Times -->
-            <form action="/health" method="POST" class="sleep-times-form">
+            <form action="/health?date={{ selected_date }}" method="POST" class="sleep-times-form">
                 <label for="bedtime">Bedtime:</label>
                 <input type="time" id="bedtime" name="bedtime" required>
                 
@@ -91,6 +124,7 @@
             </form>
         </div>
     </section>
+
     
     
 
