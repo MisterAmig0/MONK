@@ -204,8 +204,9 @@ def health():
     total_water = water_entry.consumption_ml if water_entry else 0
     water_goal = water_entry.goal_ml if water_entry else 2000  # Default goal: 2000 ml
 
-    # Handle water goal and consumption updates
+    # Handle form submissions
     if request.method == 'POST':
+        # Handle water goal and consumption updates
         if 'water_goal' in request.form:
             water_goal = int(request.form['water_goal'])
             if water_entry:
@@ -222,6 +223,7 @@ def health():
                 water_entry = Water(user=user, date=selected_date, consumption_ml=water_amount, goal_ml=water_goal)
                 db.session.add(water_entry)
 
+        # Handle sleep goal and times
         if 'sleep_goal' in request.form:
             sleep_goal = float(request.form.get('sleep_goal'))
             sleep_entry = Sleep.query.filter_by(user=user, date=selected_date).first()
@@ -247,12 +249,40 @@ def health():
                 )
                 db.session.add(sleep_entry)
 
+        # Handle food submissions
+        if 'title' in request.form:  # Check for food form submission
+            title = request.form['title']
+            description = request.form['description']
+            category = request.form['category']
+            kcal = int(request.form['kcal'])
+
+            # Handle image upload
+            image_file = request.files['image'] if 'image' in request.files else None
+            image_path = None
+            if image_file and image_file.filename:
+                image_filename = f"{datetime.now().timestamp()}_{image_file.filename}"
+                image_path = f"static/uploads/{image_filename}"
+                image_file.save(image_path)
+
+            # Create a new food entry
+            new_food = Food(
+                user=user,
+                title=title,
+                description=description,
+                category=category,
+                kcal=kcal,
+                image=image_path,
+            )
+            db.session.add(new_food)
+
         db.session.commit()
         return redirect(url_for('health', date=selected_date))
 
+    # Calculate progress for water tracking
     percentage = (total_water / water_goal) * 100 if water_goal > 0 else 0
     remaining_ml = max(water_goal - total_water, 0)
 
+    # Fetch sleep data for the selected date
     sleep_entry = Sleep.query.filter_by(user=user, date=selected_date).first()
     sleep_goal_hours = sleep_entry.sleep_goal_hours if sleep_entry else 8
     sleep_duration = None
