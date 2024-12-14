@@ -1,5 +1,14 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Date Header */
 .date-header {
     text-align: center;
+    margin-top: 20px;
 }
 
 .go-to-current {
@@ -15,46 +24,34 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
 .current-date-button:hover {
     background-color: #0056b3;
 }
 
+/* Carousel Styles */
 .carousel-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 40px 0; /* Increase margin for overall spacing */
-}
-
-.carousel-btn {
-    background-color: transparent;
-    color: white;
-    border: none;
-    font-size: 24px;
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin: 40px 0; /* Increased spacing for desktop */
 }
 
 .carousel-dates {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
-    gap: 40px; /* Increase spacing between date items */
+    gap: 40px; /* Increased spacing for better visibility */
     width: 80%;
-    padding: 20px 0; /* Add padding to ensure buttons are not cut off */
+    padding: 20px 0; /* Padding to ensure items are not cut off */
 }
 
 .carousel-item {
     flex: 0 0 auto;
     text-align: center;
 }
-
 .date-button {
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%; /* Make the button circular */
@@ -100,6 +97,7 @@
     -webkit-text-fill-color: transparent;
 }
 
+/* Modal Styles */
 textarea {
     width: 100%;
     height: 120px;
@@ -110,36 +108,36 @@ textarea {
     border-radius: 4px;
 }
 
-
 .divided-journaling {
     border-bottom: 1px solid black;
-    display: block;
-    margin: 20px 0px;
+    margin: 20px 0;
 }
 
-/* Stats design */
+/* Stats Section */
 .stats-container {
     display: flex;
+    justify-content: space-around; /* Spread out items on desktop */
+    margin: 20px auto;
+    max-width: 80%; /* Limit width for desktop */
     gap: 10px;
 }
+
+.stat-item {
+    flex: 1;
+    text-align: center;
+}
+
 .border-right-item {
     border-right: 2px solid black;
 }
-.stat-icon {
-    display: flex;
-}
 
-/* Styling for the post */
+/* Post Styles */
 .post-container {
     border-radius: 7px;
     padding: 20px;
     box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.10);
-}
-
-/* Post list */
-.post-list {
-    list-style: none;
-    padding: 0;
+    margin: 20px auto; /* Center container on desktop */
+    max-width: 800px; /* Restrict width on desktop */
 }
 
 .post-item {
@@ -147,56 +145,87 @@ textarea {
     padding: 20px;
     color: white;
     border-radius: 8px;
+    margin-bottom: 20px;
 }
 
-
-
-/* Actions container */
 .post-actions {
     display: flex;
     gap: 10px;
 }
 
 .post-section-information {
-    margin: -20px 0px;
-    line-height: 1; 
+    margin: 10px 0;
+    line-height: 1.5; /* Improve readability */
 }
 
-
+/* Circle Button for Add Post */
 .circle-button {
-  width: 80px;
-  height: 80px;
-  background-color: #f5f5f5; /* Light gray background */
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Adds subtle depth */
-  cursor: pointer;
+    width: 80px;
+    height: 80px;
+    background-color: #f5f5f5;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 
-  /* Center at the bottom middle */
-  position: fixed;
-  bottom: 20px; /* Distance from the bottom of the viewport */
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%); /* Adjust for exact center alignment */
+    /* Center at the bottom middle */
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .plus-icon {
-  font-size: 36px;
-  color: #000; /* Black color for the plus icon */
-  font-family: Arial, sans-serif;
-  line-height: 1;
+    font-size: 36px;
+    color: #000;
 }
 
+/* Modal */
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    margin: auto;
+}
 
-@media (max-width: 600px) {
+/* Desktop-Specific Styles */
+@media (min-width: 768px) {
+    .carousel-container {
+        margin: 60px 0; /* Add more margin for desktop */
+    }
+
+    .carousel-dates {
+        gap: 60px; /* Wider spacing for desktop */
+    }
+
+    .date-button {
+        width: 90px;
+        height: 90px;
+        font-size: 24px; /* Larger text for desktop */
+    }
+
+    .stats-container {
+        max-width: 1000px;
+        gap: 20px;
+    }
+
+    .post-container {
+        max-width: 1000px; /* Wider posts container for desktop */
+        padding: 30px;
+    }
+
+    .post-item {
+        padding: 30px;
+    }
+
+    textarea {
+        height: 150px; /* Increase height for better input area */
+    }
+
     .modal-content {
-        width: 90%; 
-        margin: 10% auto; 
-        padding: 15px;
+        width: 50%;
     }
 }
-
-
-
-
