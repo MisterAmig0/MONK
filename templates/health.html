@@ -123,13 +123,14 @@
             <!-- Record Sleep Times -->
             <form action="/health?date={{ selected_date }}" method="POST" class="sleep-times-form">
                 <label for="bedtime">Bedtime:</label>
-                <input type="time" id="bedtime" name="bedtime" required>
+                <input type="time" id="bedtime" name="bedtime" value="{{ bedtime }}" required>
                 
                 <label for="wake_time">Wake Time:</label>
-                <input type="time" id="wake_time" name="wake_time" required>
+                <input type="time" id="wake_time" name="wake_time" value="{{ wake_time }}" required>
                 
                 <button type="submit">Record Sleep</button>
             </form>
+            
         </div>
     </section>
 

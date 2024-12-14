@@ -231,30 +231,17 @@ def health():
                 water_entry.consumption_ml -= remove_water_amount
 
         # Handle sleep goal and times
+        sleep_entry = Sleep.query.filter_by(user=user, date=selected_date).first()
+        if not sleep_entry:
+            sleep_entry = Sleep(user=user, date=selected_date)
+            db.session.add(sleep_entry)
+
         if 'sleep_goal' in request.form:
-            sleep_goal = float(request.form.get('sleep_goal'))
-            sleep_entry = Sleep.query.filter_by(user=user, date=selected_date).first()
-            if sleep_entry:
-                sleep_entry.sleep_goal_hours = sleep_goal
-            else:
-                sleep_entry = Sleep(user=user, date=selected_date, sleep_goal_hours=sleep_goal)
-                db.session.add(sleep_entry)
+            sleep_entry.sleep_goal_hours = float(request.form['sleep_goal'])
 
         if 'bedtime' in request.form and 'wake_time' in request.form:
-            bedtime = request.form.get('bedtime')
-            wake_time = request.form.get('wake_time')
-            sleep_entry = Sleep.query.filter_by(user=user, date=selected_date).first()
-            if sleep_entry:
-                sleep_entry.bedtime = datetime.strptime(bedtime, '%H:%M').time()
-                sleep_entry.wake_time = datetime.strptime(wake_time, '%H:%M').time()
-            else:
-                sleep_entry = Sleep(
-                    user=user,
-                    date=selected_date,
-                    bedtime=datetime.strptime(bedtime, '%H:%M').time(),
-                    wake_time=datetime.strptime(wake_time, '%H:%M').time(),
-                )
-                db.session.add(sleep_entry)
+            sleep_entry.bedtime = datetime.strptime(request.form['bedtime'], '%H:%M').time()
+            sleep_entry.wake_time = datetime.strptime(request.form['wake_time'], '%H:%M').time()
 
         # Handle food submissions
         if 'title' in request.form:  # Check for food form submission
@@ -292,13 +279,10 @@ def health():
     # Fetch sleep data for the selected date
     sleep_entry = Sleep.query.filter_by(user=user, date=selected_date).first()
     sleep_goal_hours = sleep_entry.sleep_goal_hours if sleep_entry else 8
+    bedtime = sleep_entry.bedtime.strftime('%H:%M') if sleep_entry and sleep_entry.bedtime else ''
+    wake_time = sleep_entry.wake_time.strftime('%H:%M') if sleep_entry and sleep_entry.wake_time else ''
     sleep_duration = None
-    # Calculate sleep percentage
     sleep_percentage = None
-    if sleep_entry and sleep_entry.sleep_goal_hours is not None:
-        sleep_goal_hours = sleep_entry.sleep_goal_hours
-    else:
-        sleep_goal_hours = 8  # Default to 8 hours if no goal is set
 
     if sleep_entry and sleep_entry.bedtime and sleep_entry.wake_time:
         bedtime_datetime = datetime.combine(selected_date, sleep_entry.bedtime)
@@ -316,7 +300,7 @@ def health():
     search_query = request.args.get('search', '').strip()
     page = request.args.get('page', 1, type=int)
     per_page = 4
-    query = Food.query  # Removed `.filter_by(user=user)` to make it public
+    query = Food.query.filter_by(user=user)  # Only fetch food for the logged-in user
 
     if selected_category:
         query = query.filter_by(category=selected_category)
@@ -335,6 +319,8 @@ def health():
         percentage=round(percentage, 2),
         remaining_ml=remaining_ml,
         sleep_goal_hours=sleep_goal_hours,
+        bedtime=bedtime,
+        wake_time=wake_time,
         sleep_duration=round(sleep_duration, 2) if sleep_duration else None,
         sleep_percentage=round(sleep_percentage, 2) if sleep_percentage else None,
         food_items=[item.to_dict() for item in food_items],
