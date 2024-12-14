@@ -286,14 +286,24 @@ def health():
     sleep_entry = Sleep.query.filter_by(user=user, date=selected_date).first()
     sleep_goal_hours = sleep_entry.sleep_goal_hours if sleep_entry else 8
     sleep_duration = None
+    # Calculate sleep percentage
     sleep_percentage = None
+    if sleep_entry and sleep_entry.sleep_goal_hours is not None:
+        sleep_goal_hours = sleep_entry.sleep_goal_hours
+    else:
+        sleep_goal_hours = 8  # Default to 8 hours if no goal is set
+
     if sleep_entry and sleep_entry.bedtime and sleep_entry.wake_time:
         bedtime_datetime = datetime.combine(selected_date, sleep_entry.bedtime)
         wake_time_datetime = datetime.combine(selected_date, sleep_entry.wake_time)
         if wake_time_datetime < bedtime_datetime:
             wake_time_datetime += timedelta(days=1)
         sleep_duration = (wake_time_datetime - bedtime_datetime).total_seconds() / 3600
-        sleep_percentage = (sleep_duration / sleep_goal_hours) * 100 if sleep_goal_hours > 0 else 0
+        sleep_percentage = (sleep_duration / sleep_goal_hours) * 100 if sleep_goal_hours and sleep_goal_hours > 0 else 0
+    else:
+        sleep_duration = None
+        sleep_percentage = 0
+
 
     # Fetch food data with pagination
     selected_category = request.args.get('category', '')
