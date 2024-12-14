@@ -310,7 +310,7 @@ def health():
     search_query = request.args.get('search', '').strip()
     page = request.args.get('page', 1, type=int)
     per_page = 4
-    query = Food.query.filter_by(user=user)
+    query = Food.query  # Removed `.filter_by(user=user)` to make it public
 
     if selected_category:
         query = query.filter_by(category=selected_category)

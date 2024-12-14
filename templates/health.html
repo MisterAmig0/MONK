@@ -279,13 +279,19 @@
             <img src="{{ food.image }}" alt="{{ food.title }}" class="food-image">
             {% endif %}
             <h3>{{ food.title }}</h3>
-            <button class="edit-btn" data-id="{{ food.id }}" data-title="{{ food.title }}" data-description="{{ food.description }}" data-category="{{ food.category }}" data-kcal="{{ food.kcal }}" data-image="{{ food.image }}">Edit</button>
+    
+            {% if food.user == user %}  <!-- Only show edit/delete for the owner -->
+            <button class="edit-btn" data-id="{{ food.id }}" data-title="{{ food.title }}" 
+                data-description="{{ food.description }}" data-category="{{ food.category }}" 
+                data-kcal="{{ food.kcal }}" data-image="{{ food.image }}">Edit</button>
             <form action="/delete_food/{{ food.id }}" method="POST" style="display:inline;">
-                <button type="submit" class="delete-btn">Verwijder</button>
+                <button type="submit" class="delete-btn">Delete</button>
             </form>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
+    
     
         <!-- Pagination Controls -->
         <div class="pagination">
