@@ -206,7 +206,7 @@ def health():
 
     # Handle form submissions
     if request.method == 'POST':
-        # Handle water goal and consumption updates
+        # Handle water goal updates
         if 'water_goal' in request.form:
             water_goal = int(request.form['water_goal'])
             if water_entry:
@@ -215,6 +215,7 @@ def health():
                 water_entry = Water(user=user, date=selected_date, consumption_ml=0, goal_ml=water_goal)
                 db.session.add(water_entry)
 
+        # Handle adding water consumption
         if 'water_amount' in request.form:
             water_amount = int(request.form['water_amount'])
             if water_entry:
@@ -222,6 +223,12 @@ def health():
             else:
                 water_entry = Water(user=user, date=selected_date, consumption_ml=water_amount, goal_ml=water_goal)
                 db.session.add(water_entry)
+
+        # Handle removing water consumption
+        if 'remove_water_amount' in request.form:
+            remove_water_amount = int(request.form['remove_water_amount'])
+            if water_entry and water_entry.consumption_ml >= remove_water_amount:
+                water_entry.consumption_ml -= remove_water_amount
 
         # Handle sleep goal and times
         if 'sleep_goal' in request.form:
@@ -304,7 +311,6 @@ def health():
         sleep_duration = None
         sleep_percentage = 0
 
-
     # Fetch food data with pagination
     selected_category = request.args.get('category', '')
     search_query = request.args.get('search', '').strip()
@@ -338,6 +344,7 @@ def health():
         timedelta=timedelta,  # Pass timedelta to the template
         datetime=datetime,  # Pass datetime to the template
     )
+
 
 
 

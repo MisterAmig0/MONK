@@ -79,6 +79,14 @@
                 <input type="number" id="water_amount" name="water_amount" placeholder="e.g., 250" required>
                 <button type="submit">Add</button>
             </form>
+
+            <!-- Remove Water -->
+            <form action="/health?date={{ selected_date }}" method="POST" class="water-remove-form">
+                <label for="remove_water_amount">Remove Water (ml):</label>
+                <input type="number" id="remove_water_amount" name="remove_water_amount" placeholder="e.g., 250" required>
+                <button type="submit">Remove</button>
+            </form>
+
         </div>
     </section>
 
