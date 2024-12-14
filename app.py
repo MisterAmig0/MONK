@@ -117,7 +117,7 @@ def journaling():
     selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
 
     # Format day and date
-    formatted_day_date = selected_date.strftime('%A, %d %B')  # Example: "Monday, 05 December 2024"
+    formatted_day_date = selected_date.strftime('%A, %d %B')
 
     if request.method == 'POST':
         # Check if a post for the selected date already exists
@@ -149,14 +149,43 @@ def journaling():
 
     # Fetch posts for the selected date
     user_posts = Post.query.filter_by(user=user, date=selected_date).all()
+
+    # Count total entries for the year
+    current_year = selected_date.year
+    total_entries_year = Post.query.filter(
+        Post.user == user,
+        db.extract('year', Post.date) == current_year
+    ).count()
+
+    # Calculate streak
+    all_post_dates = (
+        db.session.query(Post.date)
+        .filter(Post.user == user)
+        .order_by(Post.date.desc())
+        .all()
+    )
+    streak = 0
+    if all_post_dates:
+        today = datetime.today().date()
+        current_streak_date = today
+        for post_date, in all_post_dates:
+            if post_date == current_streak_date:
+                streak += 1
+                current_streak_date -= timedelta(days=1)
+            else:
+                break
+
     return render_template(
         'journaling.html',
         posts=[post.to_dict() for post in user_posts],
         selected_date=selected_date,
-        formatted_day_date=formatted_day_date,  # Pass formatted day and date
-        timedelta=timedelta,  # Pass timedelta to the template
-        datetime=datetime  # Pass datetime to the template
+        formatted_day_date=formatted_day_date,
+        total_entries_year=total_entries_year,
+        streak=streak,  # Pass streak to the template
+        timedelta=timedelta,
+        datetime=datetime
     )
+
 
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
