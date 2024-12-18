@@ -1,0 +1,66 @@
+<nav class="bottom-navbar">
+    <a href="/health" class="nav-item {% if request.path == '/health' %}active{% endif %}">
+        <div class="nav-icon">
+            <img src="/static/images/icons/health.png" alt="Health">
+        </div>
+        <span>Health</span>
+    </a>
+    <a href="/journaling" class="nav-item {% if request.path == '/journaling' %}active{% endif %}">
+        <div class="nav-icon">
+            <img src="/static/images/icons/journaling.png" alt="Journaling">
+        </div>
+        <span>Journaling</span>
+    </a>
+    <a href="/calender" class="nav-item {% if request.path == '/calender' %}active{% endif %}">
+        <div class="nav-icon">
+            <img src="/static/images/icons/calendar.png" alt="Calender">
+        </div>
+        <span>Calendar</span>
+    </a>
+    <a href="/finance" class="nav-item {% if request.path == '/finance' %}active{% endif %}">
+        <div class="nav-icon">
+            <img src="/static/images/icons/finance.png" alt="Finance">
+        </div>
+        <span>Finance</span>
+    </a>
+</nav>
+
+<style>
+    
+  .bottom-navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background-color: #5e4b52;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+}
+
+.nav-item {
+    text-align: center;
+    padding: 20px 0px;
+    text-decoration: none;
+    color: #666;
+    font-size: 12px;
+    flex: 1;
+}
+
+.nav-item.active {
+    color: #007BFF; /* Highlight active page */
+}
+
+.nav-icon img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+    margin: 0 auto;
+}
+
+
+
+</style>

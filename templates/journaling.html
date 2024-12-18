@@ -11,14 +11,16 @@
 <body>
     <div class="navigaton-header">
         <div class="user-icon">
-            <a href="{{ url_for('select_theme') }}">
-                <div class="icon  back-button"></div>
+            <a href="#">
+                <div class="icon back-button"></div>
             </a>
-            <a href="{{ url_for('select_user', username='Sam') }}">
+            
+            <a href="#">
                 <div class="icon"></div>
             </a>
         </div>
     </div>
+
 
 
     <div class="date-header">
@@ -151,6 +153,9 @@
             {% endfor %}
         </ul>
     </div>
+
+    {% include 'footer.html' %}
+
     <script src="/static/js/modals/createPostModal.js" defer></script>
 </body>
 </html>

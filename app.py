@@ -94,16 +94,8 @@ def index():
 @app.route('/select_user/<username>')
 def select_user(username):
     session['user'] = username
-    return redirect(url_for('select_theme'))
+    return redirect(url_for('health'))
 
-# --- Select theme ---
-
-@app.route('/select_theme')
-def select_theme():
-    user = session.get('user')
-    if not user:
-        return redirect(url_for('index'))
-    return render_template('select_theme.html')
 
 # --- Journaling ---
 @app.route('/journaling', methods=['GET', 'POST'])
@@ -201,21 +193,13 @@ def delete_post(post_id):
     selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
     return redirect(url_for('journaling', date=selected_date))
 
-# --- Monkmode ---
-@app.route('/monk_mode')
-def monk_mode():
+# --- calender ---
+@app.route('/calender')
+def calender():
     user = session.get('user')
     if not user:
         return redirect(url_for('index'))
-    return render_template('monk_mode.html', user=user)
-
-# --- Goals ---
-@app.route('/goals')
-def goals():
-    user = session.get('user')
-    if not user:
-        return redirect(url_for('index'))
-    return render_template('goals.html', user=user)
+    return render_template('calender.html', user=user)
 
 # --- Health ---
 @app.route('/health', methods=['GET', 'POST'])
@@ -362,7 +346,6 @@ def health():
 
 
 
-
 @app.route('/water', methods=['GET', 'POST'])
 def water():
     user = session.get('user')
@@ -386,10 +369,6 @@ def water():
 
     total_consumption = water_entry.consumption_ml if water_entry else 0
     return render_template('water.html', total_consumption=total_consumption, user=user)
-
-
-
-
 
 
 @app.route('/edit_food', methods=['POST'])
