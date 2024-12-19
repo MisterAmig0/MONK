@@ -3,157 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/finance_card.css">
     <title>{{ account.name }} - Finance Card</title>
-    <style>
-        /* Container and Buttons */
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-            font-family: Arial, sans-serif;
-        }
-
-        .balance {
-            font-size: 2rem;
-            margin: 20px 0;
-            color: #4CAF50;
-        }
-
-        .btn {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            margin: 5px;
-        }
-
-        .btn-add {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .btn-remove {
-            background-color: #F44336;
-            color: white;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-        }
-
-        .back-btn {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: #007BFF;
-            font-size: 1rem;
-        }
-
-        .back-btn:hover {
-            text-decoration: underline;
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .btn-close {
-            background: none;
-            font-size: 18px;
-            border: none;
-            cursor: pointer;
-        }
-
-        /* Transaction Cards */
-        .transactions {
-            margin-top: 30px;
-        }
-
-        .transaction-card {
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .transaction-card.add {
-            border-left: 4px solid #4CAF50;
-        }
-
-        .transaction-card.remove {
-            border-left: 4px solid #F44336;
-        }
-
-        .transaction-details {
-            text-align: left;
-        }
-
-        .transaction-amount {
-            font-weight: bold;
-        }
-    </style>
 </head>
 <body>
+    <div class="navigaton-header">
+        <div class="user-icon">
+            <a href="#">
+                <div class="icon back-button"></div>
+            </a>
+            
+            <a href="#">
+                <div class="icon"></div>
+            </a>
+        </div>
+    </div>
+
     <div class="container">
-        <h1>{{ account.name }}</h1>
+        <p>Inside of</p>
+        <h2>{{ account.name }}</h2>
+
+
         <div class="balance">
-            Balance: ${{ account.balance }}
+            ${{ account.balance }}
         </div>
 
-        <button class="btn btn-add" id="openAddModal">Add Money</button>
-        <button class="btn btn-remove" id="openRemoveModal">Remove Money</button>
-
-        <a href="{{ url_for('finance') }}" class="back-btn">Back to Finance</a>
 
         <!-- Transactions -->
-        <div class="transactions">
-            <h2>Transactions</h2>
-            {% for transaction in transactions %}
-            <div class="transaction-card {{ transaction.type }}">
-                <div class="transaction-details">
-                    <p><strong>{{ transaction.name }}</strong></p>
-                    <p>Category: {{ transaction.category }}</p>
-                    <p>{{ transaction.timestamp }}</p>
+        <div class="transactions-carousel">
+            <div class="carousel-container">
+                {% for transaction in transactions %}
+                <div class="transaction-card {{ transaction.type }}">
+                    <div class="transaction-details">
+                        <p><strong>{{ transaction.name }}</strong></p>
+                        <p>Category: {{ transaction.category }}</p>
+                        <p>{{ transaction.timestamp }}</p>
+                    </div>
+                    <div class="transaction-amount">
+                        ${{ transaction.amount }}
+                    </div>
                 </div>
-                <div class="transaction-amount">
-                    ${{ transaction.amount }}
-                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+            <button class="carousel-control prev">&#10094;</button>
+            <button class="carousel-control next">&#10095;</button>
         </div>
+        
     </div>
 
     <!-- Add Money Modal -->
@@ -232,40 +128,29 @@
         </div>
     </div>
 
-    <script>
-        // Modal Handling
-        const addModal = document.getElementById('addModal');
-        const removeModal = document.getElementById('removeModal');
-        const openAddModal = document.getElementById('openAddModal');
-        const openRemoveModal = document.getElementById('openRemoveModal');
-        const closeAddModal = document.getElementById('closeAddModal');
-        const closeRemoveModal = document.getElementById('closeRemoveModal');
 
-        openAddModal.addEventListener('click', () => {
-            addModal.classList.add('active');
-        });
-
-        closeAddModal.addEventListener('click', () => {
-            addModal.classList.remove('active');
-        });
-
-        openRemoveModal.addEventListener('click', () => {
-            removeModal.classList.add('active');
-        });
-
-        closeRemoveModal.addEventListener('click', () => {
-            removeModal.classList.remove('active');
-        });
-
-        // Close modals when clicking outside
-        window.addEventListener('click', (event) => {
-            if (event.target === addModal) {
-                addModal.classList.remove('active');
-            }
-            if (event.target === removeModal) {
-                removeModal.classList.remove('active');
-            }
-        });
-    </script>
+    <button class="btn btn-add" id="openAddModal">Add Money</button>
+    <button class="btn btn-remove" id="openRemoveModal">Remove Money</button>
+    <script src="/static/js/modals/financeCardModal.js"></script>
 </body>
 </html>
+<script>
+    const container = document.querySelector('.carousel-container');
+    const prevButton = document.querySelector('.carousel-control.prev');
+    const nextButton = document.querySelector('.carousel-control.next');
+    let scrollAmount = 0;
+    
+    nextButton.addEventListener('click', () => {
+        const cardWidth = container.children[0].offsetWidth + 10; // Include gap
+        const maxScroll = container.scrollWidth - container.offsetWidth;
+        scrollAmount = Math.min(scrollAmount + cardWidth, maxScroll);
+        container.style.transform = `translateX(-${scrollAmount}px)`;
+    });
+    
+    prevButton.addEventListener('click', () => {
+        const cardWidth = container.children[0].offsetWidth + 10; // Include gap
+        scrollAmount = Math.max(scrollAmount - cardWidth, 0);
+        container.style.transform = `translateX(-${scrollAmount}px)`;
+    });
+    </script>
+    
