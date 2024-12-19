@@ -1,11 +1,3 @@
-@font-face {   font-family: 'PPMORI-SEMIBOLDITALIC'; src: url('/static/fonts/PPMori-SemiBoldItalic.otf');}
-@font-face {   font-family: 'PPMORI-SemiBold'; src: url('/static/fonts/PPMori-SemiBold.otf');}
-@font-face {   font-family: 'PPMORI-EXTRALIGHT'; src: url('/static/fonts/PPMori-Extralight.otf');}
-@font-face {   font-family: 'PPMORI-ExtralightItalic'; src: url('/static/fonts/PPMori-ExtralightItalic.otf');}
-@font-face {   font-family: 'PPMORI-Regular'; src: url('/static/fonts/PPMori-Regular.otf');}
-@font-face {   font-family: 'PPMORI-RegularItalic'; src: url('/static/fonts/PPMori-RegularItalic.otf');}
-
-
 section {
   margin: 0px 20px;
 }
@@ -96,31 +88,21 @@ section {
   
   /* Headings for desktop/tablets */
   h1 {
-    font-size: 45px; 
-    font-family: PPMORI-SemiBold;
-  }
+    font-size: 45px;   }
   
   h2 {
-    font-size: 40px;   
-    font-family: PPMORI-SemiBold;
-  }
+    font-size: 40px;     }
   
   h3 {
     font-size: 30px; 
-    font-weight: 100;
-    font-family: PPMORI-SemiBold;
-  }
+    font-weight: 100;  }
   
   h4 {
     font-size: 20px; 
-    font-family: PPMORI-SemiBold;
-
   }
   
   h5 {
     font-size: 10px; 
-    font-family: PPMORI-SemiBold;
-
   }
   
   
@@ -135,8 +117,6 @@ section {
     font-size: 1.2rem;   /* 16px */
     line-height: 1.6;
     font-weight: 400;
-    font-family: PPMORI-Regular;
-  
   }
   
 

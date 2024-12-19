@@ -40,8 +40,14 @@
                             <p>{{ transaction.timestamp }}</p>
                         </div>
                         <div class="transaction-amount">
-                            <p>{{ transaction.name }}</p>
-                            ${{ transaction.amount }}
+                            <h3>{{ transaction.name }}</h3>
+                            <h2>
+                                {% if transaction.type == 'add' %}
+                                    +${{ transaction.amount }}
+                                {% elif transaction.type == 'remove' %}
+                                    -${{ transaction.amount }}
+                                {% endif %}
+                            </h2>
                         </div>
                     </div>
                     {% endfor %}
@@ -130,10 +136,10 @@
 
 
     <div class="bottom-buttons">
-    <button class="btn btn-add" id="openAddModal">Add Money</button>
-    <button class="btn btn-transfer" id="openTransferModal">Transfer Money</button>
-    <button class="btn btn-remove" id="openRemoveModal">Remove Money</button>
-</div>
+        <button class="button minus-button" id="openRemoveModal">-</button>
+        <button class="button plus-button" id="openAddModal">+</button>
+        <button class="button minus-button">-</button>
+    </div>
 
 
 
