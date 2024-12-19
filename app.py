@@ -97,6 +97,25 @@ class Account(db.Model):
             "balance": self.balance
         }
 
+class Transaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(50), nullable=False)
+    account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
+    type = db.Column(db.String(10), nullable=False)  # "add" or "remove"
+    name = db.Column(db.String(100), nullable=False)  # What was added/removed
+    category = db.Column(db.String(50), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "type": self.type,
+            "name": self.name,
+            "category": self.category,
+            "amount": self.amount,
+            "timestamp": self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+        }
 
 
 
@@ -428,7 +447,6 @@ def delete_food(food_id):
 
 # --- Finance ---
 @app.route('/finance', methods=['GET', 'POST'])
-@app.route('/finance', methods=['GET', 'POST'])
 def finance():
     user = session.get('user')
     if not user:
@@ -481,31 +499,45 @@ def finance_card(account_id):
 
     if request.method == 'POST':
         action = request.form.get('action')
-
+        amount = float(request.form.get('amount', 0))
+        category = request.form.get('category')
         if action == 'add':
-            # Handle adding money
+            # Add money
             source = request.form.get('source')
-            amount = float(request.form.get('amount', 0))
-            category = request.form.get('category')
             account.balance += amount
-            # Log transaction or use this data as needed
-
+            new_transaction = Transaction(
+                user=user,
+                account_id=account.id,
+                type='add',
+                name=source,
+                category=category,
+                amount=amount,
+            )
         elif action == 'remove':
-            # Handle removing money
+            # Remove money
             purchase = request.form.get('purchase')
-            amount = float(request.form.get('amount', 0))
-            category = request.form.get('category')
             reason = request.form.get('reason')
             if account.balance >= amount:
                 account.balance -= amount
-                # Log transaction or use this data as needed
-
+                new_transaction = Transaction(
+                    user=user,
+                    account_id=account.id,
+                    type='remove',
+                    name=purchase,
+                    category=category,
+                    amount=amount,
+                )
+        db.session.add(new_transaction)
         db.session.commit()
+
+    # Fetch all transactions for this account
+    transactions = Transaction.query.filter_by(account_id=account.id).order_by(Transaction.timestamp.desc()).all()
 
     return render_template(
         'finance_card.html',
         user=user,
-        account=account.to_dict()
+        account=account.to_dict(),
+        transactions=[t.to_dict() for t in transactions]
     )
 
 

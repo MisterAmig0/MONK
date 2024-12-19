@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ account.name }} - Finance Card</title>
     <style>
-           .container {
+        /* Container and Buttons */
+        .container {
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
@@ -42,6 +43,18 @@
             opacity: 0.9;
         }
 
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 1rem;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
         /* Modal styles */
         .modal {
             display: none;
@@ -74,10 +87,6 @@
             align-items: center;
         }
 
-        .modal-header h5 {
-            margin: 0;
-        }
-
         .btn-close {
             background: none;
             font-size: 18px;
@@ -85,33 +94,37 @@
             cursor: pointer;
         }
 
-        .modal-body {
-            margin-top: 10px;
+        /* Transaction Cards */
+        .transactions {
+            margin-top: 30px;
         }
 
-        .form-group {
-            margin: 15px 0;
+        .transaction-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .transaction-card.add {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .transaction-card.remove {
+            border-left: 4px solid #F44336;
+        }
+
+        .transaction-details {
             text-align: left;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .back-btn {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: #007BFF;
-            font-size: 1rem;
-        }
-
-        .back-btn:hover {
-            text-decoration: underline;
+        .transaction-amount {
+            font-weight: bold;
         }
     </style>
-
 </head>
 <body>
     <div class="container">
@@ -124,6 +137,23 @@
         <button class="btn btn-remove" id="openRemoveModal">Remove Money</button>
 
         <a href="{{ url_for('finance') }}" class="back-btn">Back to Finance</a>
+
+        <!-- Transactions -->
+        <div class="transactions">
+            <h2>Transactions</h2>
+            {% for transaction in transactions %}
+            <div class="transaction-card {{ transaction.type }}">
+                <div class="transaction-details">
+                    <p><strong>{{ transaction.name }}</strong></p>
+                    <p>Category: {{ transaction.category }}</p>
+                    <p>{{ transaction.timestamp }}</p>
+                </div>
+                <div class="transaction-amount">
+                    ${{ transaction.amount }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 
     <!-- Add Money Modal -->
@@ -203,7 +233,7 @@
     </div>
 
     <script>
-        // JavaScript remains the same as before
+        // Modal Handling
         const addModal = document.getElementById('addModal');
         const removeModal = document.getElementById('removeModal');
         const openAddModal = document.getElementById('openAddModal');
