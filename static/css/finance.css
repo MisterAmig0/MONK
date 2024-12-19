@@ -1,0 +1,34 @@
+.modal.active {
+    display: flex;
+}
+
+
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.btn-close {
+    background: none;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Account List */
+.account-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f9f9f9;
+    transition: background 0.2s;
+    text-decoration: none;
+    color: inherit;
+}

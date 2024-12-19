@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/finance.css">
+    <title>Finance</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Finance</h1>
+        <div>
+            <h2>Your Accounts:</h2>
+            {% if accounts %}
+                {% for account in accounts %}
+                <a href="{{ url_for('finance_card', account_id=account.id) }}" class="account-card">
+                    <h4>{{ account.name }}</h4>
+                </a>
+                {% endfor %}
+            {% else %}
+                <p>No accounts found. Add one using the button below!</p>
+            {% endif %}
+        </div>
+
+        <!-- Button to open modal -->
+        <button class="btn btn-primary" id="openModalBtn">Manage Accounts</button>
+
+        <!-- Modal -->
+        <div class="modal" id="manageAccountsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Manage Accounts</h5>
+                    <button class="btn-close" id="closeModalBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add New Account Form -->
+                    <form method="POST" action="{{ url_for('finance') }}">
+                        <div>
+                            <label for="account_name">Account Name</label>
+                            <input type="text" id="account_name" name="account_name" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Account</button>
+                    </form>
+
+                    <hr>
+
+                    <!-- List of Accounts for Deletion -->
+                    <h6>Delete Accounts:</h6>
+                    <ul class="list-group">
+                        {% for account in accounts %}
+                        <li class="list-group-item">
+                            <span>{{ account.name }}</span>
+                            <form method="POST" action="{{ url_for('delete_account', account_id=account.id) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/modals/manageAccount.js"></script>
+</body>
+</html>

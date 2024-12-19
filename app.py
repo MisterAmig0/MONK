@@ -84,6 +84,17 @@ class Sleep(db.Model):
             "wake_time": self.wake_time.strftime('%H:%M') if self.wake_time else None,
         }
 
+class Account(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
+
 
 
 # --- Login ---
@@ -413,12 +424,64 @@ def delete_food(food_id):
 
 
 # --- Finance ---
-@app.route('/finance')
+@app.route('/finance', methods=['GET', 'POST'])
+@app.route('/finance', methods=['GET', 'POST'])
 def finance():
     user = session.get('user')
     if not user:
         return redirect(url_for('index'))
-    return render_template('finance.html', user=user)
+
+    # Handle account creation
+    if request.method == 'POST' and 'account_name' in request.form:
+        account_name = request.form.get('account_name', '').strip()
+        if account_name:
+            new_account = Account(user=user, name=account_name)
+            db.session.add(new_account)
+            db.session.commit()
+        return redirect(url_for('finance'))
+
+    # Fetch all accounts for the logged-in user
+    accounts = Account.query.filter_by(user=user).all()
+
+    return render_template(
+        'finance.html',
+        user=user,
+        accounts=[account.to_dict() for account in accounts]
+    )
+
+@app.route('/delete_account/<int:account_id>', methods=['POST'])
+def delete_account(account_id):
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+
+    account = Account.query.filter_by(id=account_id, user=user).first()
+    if account:
+        db.session.delete(account)
+        db.session.commit()
+
+    return redirect(url_for('finance'))
+
+
+
+
+@app.route('/finance_card/<int:account_id>')
+def finance_card(account_id):
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+
+    # Fetch the account to display details
+    account = Account.query.filter_by(id=account_id, user=user).first()
+    if not account:
+        return redirect(url_for('finance'))
+
+    return render_template(
+        'finance_card.html',
+        user=user,
+        account=account.to_dict()
+    )
+
 
 if __name__ == '__main__':
     with app.app_context():
