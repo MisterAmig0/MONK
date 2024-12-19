@@ -8,9 +8,25 @@
     <title>Finance</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Finance</h1>
-        <div>
+    <div class="navigaton-header">
+        <div class="user-icon">
+            <a href="#">
+                <div class="icon back-button"></div>
+            </a>
+            
+            <a href="#">
+                <div class="icon"></div>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="finance-container">
+        <div class="date-header">
+            <p>Manage your</p>
+            <h2>Finances</h2>
+        </div>
+        <div class="card-container">
             <h2>Your Accounts:</h2>
             {% if accounts %}
                 {% for account in accounts %}
@@ -24,7 +40,7 @@
         </div>
 
         <!-- Button to open modal -->
-        <button class="btn btn-primary" id="openModalBtn">Manage Accounts</button>
+        <button class="addAccountButton" id="openModalBtn">Manage Accounts</button>
 
         <!-- Modal -->
         <div class="modal" id="manageAccountsModal">
@@ -61,6 +77,7 @@
             </div>
         </div>
     </div>
+    {% include 'footer.html' %}
 
     <script src="/static/js/modals/manageAccount.js"></script>
 </body>

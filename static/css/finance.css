@@ -1,8 +1,22 @@
+.finance-container {
+    text-align: center;
+}
+.date-header {
+    margin-bottom: 50px;
+}
+.card-container {
+    margin-bottom: 100px;
+}
+.addAccountButton {
+    border-radius: 46px;
+    border: 1px solid white;
+    color: white;
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.10);
+}
+
 .modal.active {
     display: flex;
 }
-
-
 
 .modal-header {
     display: flex;
