@@ -88,12 +88,15 @@ class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(100), nullable=False)
+    balance = db.Column(db.Float, default=0.0)  # New field for balance
 
     def to_dict(self):
         return {
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "balance": self.balance
         }
+
 
 
 
@@ -465,22 +468,47 @@ def delete_account(account_id):
 
 
 
-@app.route('/finance_card/<int:account_id>')
+@app.route('/finance_card/<int:account_id>', methods=['GET', 'POST'])
 def finance_card(account_id):
     user = session.get('user')
     if not user:
         return redirect(url_for('index'))
 
-    # Fetch the account to display details
+    # Fetch the account for this user
     account = Account.query.filter_by(id=account_id, user=user).first()
     if not account:
         return redirect(url_for('finance'))
+
+    if request.method == 'POST':
+        action = request.form.get('action')
+
+        if action == 'add':
+            # Handle adding money
+            source = request.form.get('source')
+            amount = float(request.form.get('amount', 0))
+            category = request.form.get('category')
+            account.balance += amount
+            # Log transaction or use this data as needed
+
+        elif action == 'remove':
+            # Handle removing money
+            purchase = request.form.get('purchase')
+            amount = float(request.form.get('amount', 0))
+            category = request.form.get('category')
+            reason = request.form.get('reason')
+            if account.balance >= amount:
+                account.balance -= amount
+                # Log transaction or use this data as needed
+
+        db.session.commit()
 
     return render_template(
         'finance_card.html',
         user=user,
         account=account.to_dict()
     )
+
+
 
 
 if __name__ == '__main__':
