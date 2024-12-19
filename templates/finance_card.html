@@ -20,137 +20,126 @@
         </div>
     </div>
 
-    <div class="container">
-        <p>Inside of</p>
-        <h2>{{ account.name }}</h2>
-
-
-        <div class="balance">
-            ${{ account.balance }}
-        </div>
-
-
-        <!-- Transactions -->
-        <div class="transactions-carousel">
-            <div class="carousel-container">
-                {% for transaction in transactions %}
-                <div class="transaction-card {{ transaction.type }}">
-                    <div class="transaction-details">
-                        <p><strong>{{ transaction.name }}</strong></p>
-                        <p>Category: {{ transaction.category }}</p>
-                        <p>{{ transaction.timestamp }}</p>
-                    </div>
-                    <div class="transaction-amount">
-                        ${{ transaction.amount }}
-                    </div>
-                </div>
-                {% endfor %}
+    <section>
+        <div class="container">
+            <p>Inside of</p>
+            <h2>{{ account.name }}</h2>
+    
+    
+            <div class="balance">
+                ${{ account.balance }}
             </div>
-            <button class="carousel-control prev">&#10094;</button>
-            <button class="carousel-control next">&#10095;</button>
-        </div>
-        
-    </div>
-
-    <!-- Add Money Modal -->
-    <div class="modal" id="addModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5>Add Money</h5>
-                <button class="btn-close" id="closeAddModal">&times;</button>
+    
+    
+            <!-- Transactions -->
+            <div class="transactions-carousel">
+                <div class="carousel-container">
+                    {% for transaction in transactions %}
+                    <div class="transaction-card {{ transaction.type }}">
+                        <div class="transaction-details">
+                            <p>{{ transaction.timestamp }}</p>
+                        </div>
+                        <div class="transaction-amount">
+                            <p>{{ transaction.name }}</p>
+                            ${{ transaction.amount }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
-            <form method="POST" action="{{ url_for('finance_card', account_id=account.id) }}">
-                <input type="hidden" name="action" value="add">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="source">Where did you get the money?</label>
-                        <input type="text" id="source" name="source" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="amount">Amount</label>
-                        <input type="number" id="amount" name="amount" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="category">Category</label>
-                        <select id="category" name="category" required>
-                            <option value="" disabled selected>Select a category</option>
-                            <option value="Salary">Salary</option>
-                            <option value="Gift">Gift</option>
-                            <option value="Investment">Investment</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-add">Confirm</button>
-                </div>
-            </form>
+            
         </div>
-    </div>
-
-    <!-- Remove Money Modal -->
-    <div class="modal" id="removeModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5>Remove Money</h5>
-                <button class="btn-close" id="closeRemoveModal">&times;</button>
+    
+        <!-- Add Money Modal -->
+        <div class="modal" id="addModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Add Money</h5>
+                    <button class="btn-close" id="closeAddModal">&times;</button>
+                </div>
+                <form method="POST" action="{{ url_for('finance_card', account_id=account.id) }}">
+                    <input type="hidden" name="action" value="add">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="source">Where did you get the money?</label>
+                            <input type="text" id="source" name="source" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount</label>
+                            <input type="number" id="amount" name="amount" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category" name="category" required>
+                                <option value="" disabled selected>Select a category</option>
+                                <option value="Salary">Salary</option>
+                                <option value="Gift">Gift</option>
+                                <option value="Investment">Investment</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-add">Confirm</button>
+                    </div>
+                </form>
             </div>
-            <form method="POST" action="{{ url_for('finance_card', account_id=account.id) }}">
-                <input type="hidden" name="action" value="remove">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="purchase">What did you buy?</label>
-                        <input type="text" id="purchase" name="purchase" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="amount">Amount</label>
-                        <input type="number" id="amount" name="amount" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="category">Category</label>
-                        <select id="category" name="category" required>
-                            <option value="" disabled selected>Select a category</option>
-                            <option value="Groceries">Groceries</option>
-                            <option value="Entertainment">Entertainment</option>
-                            <option value="Utilities">Utilities</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="reason">Why?</label>
-                        <textarea id="reason" name="reason" rows="3" required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-remove">Confirm</button>
-                </div>
-            </form>
         </div>
-    </div>
+    
+        <!-- Remove Money Modal -->
+        <div class="modal" id="removeModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Remove Money</h5>
+                    <button class="btn-close" id="closeRemoveModal">&times;</button>
+                </div>
+                <form method="POST" action="{{ url_for('finance_card', account_id=account.id) }}">
+                    <input type="hidden" name="action" value="remove">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="purchase">What did you buy?</label>
+                            <input type="text" id="purchase" name="purchase" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount</label>
+                            <input type="number" id="amount" name="amount" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category" name="category" required>
+                                <option value="" disabled selected>Select a category</option>
+                                <option value="Groceries">Groceries</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reason">Why?</label>
+                            <textarea id="reason" name="reason" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-remove">Confirm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+   
 
 
+    <div class="bottom-buttons">
     <button class="btn btn-add" id="openAddModal">Add Money</button>
+    <button class="btn btn-transfer" id="openTransferModal">Transfer Money</button>
     <button class="btn btn-remove" id="openRemoveModal">Remove Money</button>
+</div>
+
+
+
+
     <script src="/static/js/modals/financeCardModal.js"></script>
+    <script src="/static/js/financeCaroussal.js"></script>
 </body>
 </html>
-<script>
-    const container = document.querySelector('.carousel-container');
-    const prevButton = document.querySelector('.carousel-control.prev');
-    const nextButton = document.querySelector('.carousel-control.next');
-    let scrollAmount = 0;
-    
-    nextButton.addEventListener('click', () => {
-        const cardWidth = container.children[0].offsetWidth + 10; // Include gap
-        const maxScroll = container.scrollWidth - container.offsetWidth;
-        scrollAmount = Math.min(scrollAmount + cardWidth, maxScroll);
-        container.style.transform = `translateX(-${scrollAmount}px)`;
-    });
-    
-    prevButton.addEventListener('click', () => {
-        const cardWidth = container.children[0].offsetWidth + 10; // Include gap
-        scrollAmount = Math.max(scrollAmount - cardWidth, 0);
-        container.style.transform = `translateX(-${scrollAmount}px)`;
-    });
-    </script>
     

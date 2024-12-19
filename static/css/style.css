@@ -5,6 +5,10 @@
 @font-face {   font-family: 'PPMORI-Regular'; src: url('/static/fonts/PPMori-Regular.otf');}
 @font-face {   font-family: 'PPMORI-RegularItalic'; src: url('/static/fonts/PPMori-RegularItalic.otf');}
 
+
+section {
+  margin: 0px 20px;
+}
 :root {
   --background-color: #262324;
   --white: #EEEEEE;
