@@ -1,13 +1,13 @@
 <nav class="bottom-navbar">
     <a href="/health" class="nav-item {% if request.path == '/health' %}active{% endif %}">
         <div class="nav-icon">
-            <img src="/static/images/icons/health.png" alt="Health">
+            <img src="/static/images/icons/activity.png" alt="Health">
         </div>
         <span>Health</span>
     </a>
     <a href="/journaling" class="nav-item {% if request.path == '/journaling' %}active{% endif %}">
         <div class="nav-icon">
-            <img src="/static/images/icons/journaling.png" alt="Journaling">
+            <img src="/static/images/icons/book.png" alt="Journaling">
         </div>
         <span>Journaling</span>
     </a>
@@ -19,7 +19,7 @@
     </a>
     <a href="/finance" class="nav-item {% if request.path == '/finance' %}active{% endif %}">
         <div class="nav-icon">
-            <img src="/static/images/icons/finance.png" alt="Finance">
+            <img src="/static/images/icons/dollar-sign.png" alt="Finance">
         </div>
         <span>Finance</span>
     </a>
@@ -43,10 +43,8 @@
 
 .nav-item {
     text-align: center;
-    padding: 20px 0px;
     text-decoration: none;
-    color: #666;
-    font-size: 12px;
+    color: white;
     flex: 1;
 }
 
