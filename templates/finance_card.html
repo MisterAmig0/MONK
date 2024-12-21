@@ -47,7 +47,25 @@
                     {% for transaction in transactions %}
                     <div class="transaction-card {{ transaction.type }}">
                         <div class="transaction-details">
-                            <p>{{ transaction.timestamp }}</p>
+                            <div class="transaction-icon">
+                                {% if transaction.category == 'Salary' %}
+                                    <img src="/static/images/icons/dollar-sign.png" alt="Salary Icon">
+                                {% elif transaction.category == 'Groceries' %}
+                                    <img src="/static/icons/groceries.png" alt="Groceries Icon">
+                                {% elif transaction.category == 'Entertainment' %}
+                                    <img src="/static/icons/entertainment.png" alt="Entertainment Icon">
+                                {% elif transaction.category == 'Utilities' %}
+                                    <img src="/static/icons/utilities.png" alt="Utilities Icon">
+                                {% elif transaction.category == 'Gift' %}
+                                    <img src="/static/icons/gift.png" alt="Gift Icon">
+                                {% elif transaction.category == 'Investment' %}
+                                    <img src="/static/icons/investment.png" alt="Investment Icon">
+                                {% elif transaction.category == 'Other' %}
+                                    <img src="/static/icons/other.png" alt="Other Icon">
+                                {% else %}
+                                    <img src="/static/icons/default.png" alt="Default Icon">
+                                {% endif %}
+                            </div>
                         </div>
                         <div class="transaction-amount">
                             <h3>{{ transaction.name }}</h3>
@@ -60,6 +78,7 @@
                             </h2>
                         </div>
                     </div>
+                    
                     {% endfor %}
                 </div>
             </div>
