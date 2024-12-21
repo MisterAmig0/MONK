@@ -149,7 +149,6 @@ textarea {
 
 .post-section-information {
     margin: 10px 0;
-    line-height: 1.5; /* Improve readability */
 }
 
 /* Circle Button for Add Post */
@@ -176,14 +175,6 @@ textarea {
     color: #000;
 }
 
-/* Modal */
-.modal-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-    margin: auto;
-}
 
 /* Desktop-Specific Styles */
 @media (min-width: 768px) {
