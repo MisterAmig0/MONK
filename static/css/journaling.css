@@ -10,6 +10,10 @@
     text-align: center;
 }
 
+.journaling-post-header {
+    display: flex;
+    gap: 75px;
+}
 .current-date-button {
     padding: 10px 20px;
     background-color: #007BFF;

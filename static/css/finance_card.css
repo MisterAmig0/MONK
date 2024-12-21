@@ -73,7 +73,7 @@
         transform: translateX(-50%);
         display: flex;
         gap: 50px;
-        z-index: 1000;
+        z-index: 5;
     }
 
     

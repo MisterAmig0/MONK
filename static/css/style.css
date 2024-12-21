@@ -1,6 +1,9 @@
 section {
   margin: 0px 20px;
 }
+li {
+  list-style-type: none;
+}
 :root {
   --background-color: #262324;
   --white: #EEEEEE;

@@ -248,7 +248,7 @@ def health():
     # Fetch water data for the selected date
     water_entry = Water.query.filter_by(user=user, date=selected_date).first()
     total_water = water_entry.consumption_ml if water_entry else 0
-    water_goal = water_entry.goal_ml if water_entry else 2000  # Default goal: 2000 ml
+    water_goal = water_entry.goal_ml if water_entry else 3000  # Default goal:3000 ml
 
     # Handle form submissions
     if request.method == 'POST':
