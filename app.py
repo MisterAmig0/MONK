@@ -117,6 +117,23 @@ class Transaction(db.Model):
             "timestamp": self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
         }
 
+class Agenda(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(50), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)  # Start time for the task
+    end_time = db.Column(db.Time, nullable=False)    # End time for the task
+    description = db.Column(db.Text, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "date": self.date.isoformat(),
+            "start_time": self.start_time.strftime('%H:%M'),
+            "end_time": self.end_time.strftime('%H:%M'),
+            "description": self.description,
+        }
+
 
 
 # --- Login ---
@@ -227,12 +244,58 @@ def delete_post(post_id):
     return redirect(url_for('journaling', date=selected_date))
 
 # --- calender ---
-@app.route('/calender')
-def calender():
+@app.route('/calendar', methods=['GET', 'POST'])
+def calendar():
     user = session.get('user')
     if not user:
         return redirect(url_for('index'))
-    return render_template('calender.html', user=user)
+
+    # Get the selected date or default to today
+    selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
+    selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
+
+    # Handle form submissions
+    if request.method == 'POST':
+        start_time = datetime.strptime(request.form['start_time'], '%H:%M').time()
+        end_time = datetime.strptime(request.form['end_time'], '%H:%M').time()
+        description = request.form['description']
+        new_agenda_item = Agenda(
+            user=user,
+            date=selected_date,
+            start_time=start_time,
+            end_time=end_time,
+            description=description
+        )
+        db.session.add(new_agenda_item)
+        db.session.commit()
+        return redirect(url_for('calendar', date=selected_date))
+
+    # Fetch agenda items for the selected date
+    agenda_items = Agenda.query.filter_by(user=user, date=selected_date).order_by(Agenda.start_time).all()
+
+    return render_template(
+        'calendar.html',
+        user=user,
+        selected_date=selected_date,
+        agenda_items=[item.to_dict() for item in agenda_items],
+        datetime=datetime,
+    )
+@app.route('/delete_agenda/<int:agenda_id>', methods=['POST'])
+def delete_agenda(agenda_id):
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+
+    # Fetch the agenda item by ID and ensure it belongs to the logged-in user
+    agenda_item = Agenda.query.filter_by(id=agenda_id, user=user).first()
+    if agenda_item:
+        db.session.delete(agenda_item)
+        db.session.commit()
+
+    # Redirect to the calendar with the same date
+    selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
+    return redirect(url_for('calendar', date=selected_date))
+
 
 # --- Health ---
 @app.route('/health', methods=['GET', 'POST'])

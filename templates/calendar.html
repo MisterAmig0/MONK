@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        form label {
+            margin-right: 10px;
+        }
+        form input, form button {
+            margin: 5px;
+        }
+        .agenda-container {
+            display: flex;
+            flex-direction: column;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .agenda-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .agenda-item span {
+            flex: 1;
+            text-align: center;
+        }
+        .time {
+            font-weight: bold;
+            color: #333;
+        }
+        .description {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Agenda for {{ selected_date.strftime('%A, %d %B %Y') }}</h1>
+
+    <div>
+        <form method="POST">
+            <label for="start_time">Start Time:</label>
+            <input type="time" id="start_time" name="start_time" required>
+            <label for="end_time">End Time:</label>
+            <input type="time" id="end_time" name="end_time" required>
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" required>
+            <button type="submit">Add Task</button>
+        </form>
+    </div>
+
+    <div class="agenda-container">
+        <h2>Daily Agenda</h2>
+        {% if agenda_items %}
+            {% for item in agenda_items %}
+                <div class="agenda-item">
+                    <span class="time">{{ item.start_time }} - {{ item.end_time }}</span>
+                    <span class="description">{{ item.description }}</span>
+                    <form method="POST" action="{{ url_for('delete_agenda', agenda_id=item.id, date=selected_date) }}" style="display: inline;">
+                        <button type="submit" style="margin-left: 10px; background-color: #ff4d4d; color: white; border: none; border-radius: 3px; padding: 5px 10px; cursor: pointer;">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center;">No tasks scheduled for today.</p>
+        {% endif %}
+    </div>
+    
+
+    <a href="{{ url_for('index') }}" style="display: block; text-align: center; margin-top: 20px;">Back to Home</a>
+</body>
+</html>
