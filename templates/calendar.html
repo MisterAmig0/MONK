@@ -3,16 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
     <title>Calendar</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
-        }
-        h1, h2 {
-            text-align: center;
-        }
         .navigation {
             display: flex;
             justify-content: center;
@@ -109,5 +102,7 @@
             <p style="text-align: center;">No tasks scheduled for today.</p>
         {% endif %}
     </div>
+    {% include 'footer.html' %}
+
 </body>
 </html>
