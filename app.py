@@ -121,9 +121,10 @@ class Agenda(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(50), nullable=False)
     date = db.Column(db.Date, nullable=False)
-    start_time = db.Column(db.Time, nullable=False)  # Start time for the task
-    end_time = db.Column(db.Time, nullable=False)    # End time for the task
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
     description = db.Column(db.Text, nullable=False)
+    completed = db.Column(db.Boolean, default=False)  
 
     def to_dict(self):
         return {
@@ -132,6 +133,7 @@ class Agenda(db.Model):
             "start_time": self.start_time.strftime('%H:%M'),
             "end_time": self.end_time.strftime('%H:%M'),
             "description": self.description,
+            "completed": self.completed,
         }
 
 
@@ -273,13 +275,20 @@ def calendar():
     # Fetch agenda items for the selected date
     agenda_items = Agenda.query.filter_by(user=user, date=selected_date).order_by(Agenda.start_time).all()
 
+    # Calculate previous and next dates
+    previous_date = selected_date - timedelta(days=1)
+    next_date = selected_date + timedelta(days=1)
+
     return render_template(
         'calendar.html',
         user=user,
         selected_date=selected_date,
         agenda_items=[item.to_dict() for item in agenda_items],
+        previous_date=previous_date,
+        next_date=next_date,
         datetime=datetime,
     )
+
 @app.route('/delete_agenda/<int:agenda_id>', methods=['POST'])
 def delete_agenda(agenda_id):
     user = session.get('user')
@@ -290,6 +299,22 @@ def delete_agenda(agenda_id):
     agenda_item = Agenda.query.filter_by(id=agenda_id, user=user).first()
     if agenda_item:
         db.session.delete(agenda_item)
+        db.session.commit()
+
+    # Redirect to the calendar with the same date
+    selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
+    return redirect(url_for('calendar', date=selected_date))
+
+@app.route('/toggle_completion/<int:agenda_id>', methods=['POST'])
+def toggle_completion(agenda_id):
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+
+    # Fetch the agenda item by ID and ensure it belongs to the logged-in user
+    agenda_item = Agenda.query.filter_by(id=agenda_id, user=user).first()
+    if agenda_item:
+        agenda_item.completed = not agenda_item.completed  # Toggle the completion status
         db.session.commit()
 
     # Redirect to the calendar with the same date
