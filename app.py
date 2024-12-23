@@ -370,15 +370,16 @@ def toggle_completion(agenda_id):
 def toggle_checklist(checklist_id):
     user = session.get('user')
     if not user:
-        return redirect(url_for('index'))
+        return jsonify({"error": "Unauthorized"}), 403
 
-    checklist_item = ChecklistItem.query.get(checklist_id)
+    checklist_item = ChecklistItem.query.filter_by(id=checklist_id).first()
     if checklist_item:
-        checklist_item.completed = not checklist_item.completed
+        data = request.get_json()
+        checklist_item.completed = data.get('completed', False)
         db.session.commit()
+        return jsonify({"success": True, "completed": checklist_item.completed})
+    return jsonify({"error": "Checklist item not found"}), 404
 
-    selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
-    return redirect(url_for('calendar', date=selected_date))
 
 
 # --- Health ---
