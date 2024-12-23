@@ -123,24 +123,25 @@
                     </div>
                     <hr>
                 </div>
-                <pre class="post-content">
+                <div class="post-content">
                     <div class="post-section-information">
                         <h4>Wat wil je vandaag gaan doen?</h4>
-            {{ post.question1 }}
+                        {{ post.question1 }}
                     </div>
                     <div class="post-section-information">
                         <h4>Waar ben je vandaag trots op?</h4>
-            {{ post.question2 }}
+                        {{ post.question2 }}
                     </div>
                     <div class="post-section-information">
                         <h4>Wat wil je morgen gaan doen</h4>
-            {{ post.question3 }}
+                        {{ post.question3 }}
                     </div>
                     <div class="post-section-information">
                         <h4>Waar liep je vandaag tegen aan?</h4>
-            {{ post.question4 }}
+                        {{ post.question4 }}
                     </div>
-                </pre>
+                </div>
+                
                 <div class="post-actions">
                     <form action="/delete_post/{{ post.id }}" method="post" class="delete-form">
                         <button type="submit" class="btn delete-post" 
