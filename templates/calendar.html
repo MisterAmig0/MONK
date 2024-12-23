@@ -113,6 +113,17 @@
     </style>
 </head>
 <body>
+    <div class="navigation-header">
+        <div class="user-icon">
+            <a href="{{ url_for('quick_links') }}"> 
+                <div class="icon back-button"></div>
+            </a>
+            
+            <a href="#">
+                <div class="icon"></div>
+            </a>
+        </div>
+    </div>
     <h1>Agenda for {{ selected_date.strftime('%A, %d %B %Y') }}</h1>
 
     <div class="calendar-navigation">

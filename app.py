@@ -145,7 +145,26 @@ def index():
 @app.route('/select_user/<username>')
 def select_user(username):
     session['user'] = username
-    return redirect(url_for('health'))
+    return redirect(url_for('quick_links'))  # Redirect to Quick Links
+
+
+@app.route('/quick_links')
+def quick_links():
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+
+    links = [
+        {"name": "Home", "url": url_for('index')},
+        {"name": "Journaling", "url": url_for('journaling')},
+        {"name": "Calendar", "url": url_for('calendar')},
+        {"name": "Health", "url": url_for('health')},
+        {"name": "Water Tracker", "url": url_for('water')},
+        {"name": "Finance", "url": url_for('finance')},
+    ]
+    return render_template('quick_links.html', user=user, links=links, datetime=datetime)
+
+
 
 # --- Journaling ---
 @app.route('/journaling', methods=['GET', 'POST'])
