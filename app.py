@@ -116,15 +116,30 @@ class Transaction(db.Model):
             "timestamp": self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
         }
 
+class ChecklistItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    agenda_id = db.Column(db.Integer, db.ForeignKey('agenda.id'), nullable=False)
+    text = db.Column(db.String(255), nullable=False)
+    completed = db.Column(db.Boolean, default=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "agenda_id": self.agenda_id,
+            "text": self.text,
+            "completed": self.completed,
+        }
+
 class Agenda(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(50), nullable=False)
     date = db.Column(db.Date, nullable=False)
     start_time = db.Column(db.Time, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
-    title = db.Column(db.String(100), nullable=False)  # Add this field
+    title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     completed = db.Column(db.Boolean, default=False)
+    checklist_items = db.relationship('ChecklistItem', backref='agenda', lazy=True)
 
     def to_dict(self):
         return {
@@ -132,10 +147,12 @@ class Agenda(db.Model):
             "date": self.date.isoformat(),
             "start_time": self.start_time.strftime('%H:%M'),
             "end_time": self.end_time.strftime('%H:%M'),
-            "title": self.title,  # Include title
+            "title": self.title,
             "description": self.description,
             "completed": self.completed,
+            "checklist_items": [item.to_dict() for item in self.checklist_items],
         }
+
 
 # --- Login ---
 @app.route('/')
@@ -267,32 +284,42 @@ def calendar():
     if not user:
         return redirect(url_for('index'))
 
-    # Get the selected date or default to today
     selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
     selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
 
-    # Handle form submissions
     if request.method == 'POST':
         start_time = datetime.strptime(request.form['start_time'], '%H:%M').time()
         end_time = datetime.strptime(request.form['end_time'], '%H:%M').time()
-        title = request.form['title']  # Capture title
+        title = request.form['title']
         description = request.form['description']
+
+        # Create the agenda item
         new_agenda_item = Agenda(
             user=user,
             date=selected_date,
             start_time=start_time,
             end_time=end_time,
             title=title,
-            description=description
+            description=description,
         )
         db.session.add(new_agenda_item)
+        db.session.flush()  # Get the ID for the new agenda item
+
+        # Add checklist items
+        checklist_items = request.form.getlist('checklist[]')
+        for item_text in checklist_items:
+            if item_text.strip():
+                new_checklist_item = ChecklistItem(
+                    agenda_id=new_agenda_item.id,
+                    text=item_text.strip(),
+                )
+                db.session.add(new_checklist_item)
+
         db.session.commit()
         return redirect(url_for('calendar', date=selected_date))
 
-    # Fetch agenda items for the selected date
+    # Fetch tasks
     agenda_items = Agenda.query.filter_by(user=user, date=selected_date).order_by(Agenda.start_time).all()
-
-    # Calculate previous and next dates
     previous_date = selected_date - timedelta(days=1)
     next_date = selected_date + timedelta(days=1)
 
@@ -305,6 +332,7 @@ def calendar():
         next_date=next_date,
         datetime=datetime,
     )
+
 
 @app.route('/delete_agenda/<int:agenda_id>', methods=['POST'])
 def delete_agenda(agenda_id):
@@ -337,6 +365,21 @@ def toggle_completion(agenda_id):
     # Redirect to the calendar with the same date
     selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
     return redirect(url_for('calendar', date=selected_date))
+
+@app.route('/toggle_checklist/<int:checklist_id>', methods=['POST'])
+def toggle_checklist(checklist_id):
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('index'))
+
+    checklist_item = ChecklistItem.query.get(checklist_id)
+    if checklist_item:
+        checklist_item.completed = not checklist_item.completed
+        db.session.commit()
+
+    selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
+    return redirect(url_for('calendar', date=selected_date))
+
 
 # --- Health ---
 @app.route('/health', methods=['GET', 'POST'])

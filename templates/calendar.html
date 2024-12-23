@@ -140,10 +140,18 @@
             <input type="time" id="start_time" name="start_time" required>
             <label for="end_time">End Time:</label>
             <input type="time" id="end_time" name="end_time" required>
-            <label for="title">Title:</label> <!-- New field -->
+            <label for="title">Title:</label>
             <input type="text" id="title" name="title" required>
             <label for="description">Description:</label>
             <textarea id="description" name="description" required></textarea>
+            
+            <!-- Checklist Input Section -->
+            <label>Checklist:</label>
+            <div id="checklist-container">
+                <input type="text" name="checklist[]" placeholder="Checklist Item 1">
+            </div>
+            <button type="button" onclick="addChecklistItem()">Add More Checklist Items</button>
+            
             <button type="submit">Add Task</button>
         </form>
     </div>
@@ -152,52 +160,100 @@
         <h2>Daily Agenda</h2>
         {% if agenda_items %}
             {% for item in agenda_items %}
-                <div class="agenda-item" style="background-color: {% if item.completed %}#d4edda{% else %}#ffffff{% endif %};">
-                    <span class="time">{{ item.start_time }} - {{ item.end_time }}</span>
-                    <span class="title" style="font-weight: bold; cursor: pointer;" onclick="openModal('{{ item.title }}', '{{ item.description }}')">
-                        {{ item.title }}
-                    </span>
-                    <form method="POST" action="{{ url_for('toggle_completion', agenda_id=item.id, date=selected_date) }}" style="display: inline;">
-                        <button type="submit" style="margin-left: 10px; background-color: {% if item.completed %}#28a745{% else %}#ffc107{% endif %}; color: white; border: none; border-radius: 3px; padding: 5px 10px; cursor: pointer;">
-                            {% if item.completed %}Completed{% else %}Mark Complete{% endif %}
-                        </button>
-                    </form>
-                    <form method="POST" action="{{ url_for('delete_agenda', agenda_id=item.id, date=selected_date) }}" style="display: inline;">
-                        <button type="submit" style="margin-left: 10px; background-color: #ff4d4d; color: white; border: none; border-radius: 3px; padding: 5px 10px; cursor: pointer;">
-                            Delete
-                        </button>
-                    </form>
-                </div>
-            {% endfor %}
+            <div class="agenda-item" style="background-color: {% if item.completed %}#d4edda{% else %}#ffffff{% endif %};">
+                <span class="time">{{ item.start_time }} - {{ item.end_time }}</span>
+                <span class="title" 
+                    style="font-weight: bold; cursor: pointer;" 
+                    data-title="{{ item.title }}"
+                    data-description="{{ item.description }}"
+                    data-checklist='{{ item.checklist_items | tojson | safe }}'
+                    onclick="handleOpenModal(this)">
+                    {{ item.title }}
+                </span>
+                <form method="POST" action="{{ url_for('toggle_completion', agenda_id=item.id, date=selected_date) }}" style="display: inline;">
+                    <button type="submit" style="margin-left: 10px; background-color: {% if item.completed %}#28a745{% else %}#ffc107{% endif %}; color: white; border: none; border-radius: 3px; padding: 5px 10px; cursor: pointer;">
+                        {% if item.completed %}Completed{% else %}Mark Complete{% endif %}
+                    </button>
+                </form>
+                <form method="POST" action="{{ url_for('delete_agenda', agenda_id=item.id, date=selected_date) }}" style="display: inline;">
+                    <button type="submit" style="margin-left: 10px; background-color: #ff4d4d; color: white; border: none; border-radius: 3px; padding: 5px 10px; cursor: pointer;">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        {% endfor %}
+    
         {% else %}
             <p style="text-align: center;">No tasks scheduled for today.</p>
         {% endif %}
     </div>
     
-    <!-- Modal Structure -->
-    <div id="agendaModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close-button" onclick="closeModal()">&times;</span>
-            <h3 id="modalTitle"></h3>
-            <p id="modalDescription"></p>
+    
+        <!-- Modal Structure -->
+        <div id="agendaModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeModal()">&times;</span>
+                <h3 id="modalTitle"></h3>
+                <p id="modalDescription"></p>
+                <div id="modalChecklist">
+                    <h4>Checklist:</h4>
+                    <ul id="checklistItems"></ul>
+                </div>
+            </div>
         </div>
-    </div>
+        
+
     
 
     
     <!-- Modal Script -->
     <script>
-        function openModal(title, description) {
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalDescription').textContent = description;
-            document.getElementById('agendaModal').style.display = 'block';
+        function handleOpenModal(element) {
+            try {
+                // Retrieve task data from the clicked element
+                const title = element.getAttribute('data-title');
+                const description = element.getAttribute('data-description');
+                const checklistData = element.getAttribute('data-checklist') || '[]';
+    
+                // Safely parse the checklist JSON
+                const checklist = JSON.parse(checklistData);
+    
+                // Populate modal content
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('modalDescription').textContent = description;
+    
+                // Populate the checklist
+                const checklistContainer = document.getElementById('checklistItems');
+                checklistContainer.innerHTML = ''; // Clear previous checklist items
+    
+                if (checklist.length > 0) {
+                    checklist.forEach(item => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <form method="POST" action="/toggle_checklist/${item.id}" style="display: inline;">
+                                <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="this.form.submit()">
+                                ${item.text}
+                            </form>
+                        `;
+                        checklistContainer.appendChild(listItem);
+                    });
+                } else {
+                    checklistContainer.innerHTML = '<p>No checklist items for this task.</p>';
+                }
+    
+                // Display the modal
+                document.getElementById('agendaModal').style.display = 'block';
+            } catch (error) {
+                console.error("Error parsing checklist data:", error);
+                alert("Failed to open task details. Please try again.");
+            }
         }
     
         function closeModal() {
             document.getElementById('agendaModal').style.display = 'none';
         }
     
-        // Close the modal if the user clicks outside of it
+        // Event listener to close the modal when clicking outside of it
         window.onclick = function(event) {
             const modal = document.getElementById('agendaModal');
             if (event.target === modal) {
@@ -205,6 +261,9 @@
             }
         };
     </script>
+    
+    
+    
     
     {% include 'footer.html' %}
 
@@ -218,5 +277,16 @@
         } else {
             desc.style.display = 'none';
         }
+    }
+</script>
+<script>
+    function addChecklistItem() {
+        const container = document.getElementById('checklist-container');
+        const inputCount = container.querySelectorAll('input').length + 1;
+        const newItem = document.createElement('input');
+        newItem.type = 'text';
+        newItem.name = 'checklist[]';
+        newItem.placeholder = `Checklist Item ${inputCount}`;
+        container.appendChild(newItem);
     }
 </script>
