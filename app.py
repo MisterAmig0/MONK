@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from datetime import datetime, timedelta  # Import timedelta
 
-
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
@@ -138,9 +137,6 @@ class Agenda(db.Model):
             "completed": self.completed,
         }
 
-
-
-
 # --- Login ---
 @app.route('/')
 def index():
@@ -150,7 +146,6 @@ def index():
 def select_user(username):
     session['user'] = username
     return redirect(url_for('health'))
-
 
 # --- Journaling ---
 @app.route('/journaling', methods=['GET', 'POST'])
@@ -233,7 +228,6 @@ def journaling():
         datetime=datetime
     )
 
-
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
     user = session.get('user')
@@ -294,7 +288,6 @@ def calendar():
         datetime=datetime,
     )
 
-
 @app.route('/delete_agenda/<int:agenda_id>', methods=['POST'])
 def delete_agenda(agenda_id):
     user = session.get('user')
@@ -326,7 +319,6 @@ def toggle_completion(agenda_id):
     # Redirect to the calendar with the same date
     selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
     return redirect(url_for('calendar', date=selected_date))
-
 
 # --- Health ---
 @app.route('/health', methods=['GET', 'POST'])
@@ -471,8 +463,6 @@ def health():
         datetime=datetime,  # Pass datetime to the template
     )
 
-
-
 @app.route('/water', methods=['GET', 'POST'])
 def water():
     user = session.get('user')
@@ -537,8 +527,6 @@ def delete_food(food_id):
 
     return redirect(url_for('health'))
 
-
-
 # --- Finance ---
 @app.route('/finance', methods=['GET', 'POST'])
 def finance():
@@ -576,9 +564,6 @@ def delete_account(account_id):
         db.session.commit()
 
     return redirect(url_for('finance'))
-
-
-
 
 @app.route('/finance_card/<int:account_id>', methods=['GET', 'POST'])
 def finance_card(account_id):
@@ -633,9 +618,6 @@ def finance_card(account_id):
         account=account.to_dict(),
         transactions=[t.to_dict() for t in transactions]
     )
-
-
-
 
 if __name__ == '__main__':
     with app.app_context():

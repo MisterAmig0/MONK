@@ -22,24 +22,6 @@
 }
 
 
-/* Create food item modal */
-.modal-content label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-}
-
-.modal-content input,
-.modal-content textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-
 /* Search / Filter food */
 .filter-container {
     display: flex;
@@ -189,7 +171,6 @@
 .pagination li.active a {
     color: white;
 }
-
 
 
 
