@@ -6,31 +6,87 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <title>Calendar</title>
     <style>
-        .navigation {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        .navigation a, .navigation form button {
-            margin: 0 10px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .navigation form input {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
+    .calendar-navigation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin: 20px 0;
+    }
+    .calendar-navigation a {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .calendar-navigation a:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+    .calendar-navigation form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .calendar-navigation form input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+    .task-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        margin: 20px auto;
+        max-width: 500px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .task-form label {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #333;
+        align-self: flex-start;
+    }
+    .task-form input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        width: 100%;
+        font-size: 1rem;
+    }
+    .task-form button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .task-form button:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
         .agenda-container {
             display: flex;
             flex-direction: column;
             max-width: 600px;
             margin: 0 auto;
+            padding-bottom: 200px;
         }
         .agenda-item {
             display: flex;
@@ -59,15 +115,15 @@
 <body>
     <h1>Agenda for {{ selected_date.strftime('%A, %d %B %Y') }}</h1>
 
-    <div class="navigation">
+    <div class="calendar-navigation">
         <a href="{{ url_for('calendar', date=previous_date) }}">Previous Day</a>
         <form method="GET" action="{{ url_for('calendar') }}">
             <input type="date" name="date" value="{{ selected_date }}" required>
         </form>
         <a href="{{ url_for('calendar', date=next_date) }}">Next Day</a>
     </div>
-
-    <div>
+    
+    <div class="task-form">
         <form method="POST">
             <label for="start_time">Start Time:</label>
             <input type="time" id="start_time" name="start_time" required>
