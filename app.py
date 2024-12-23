@@ -155,11 +155,10 @@ def quick_links():
         return redirect(url_for('index'))
 
     links = [
-        {"name": "Home", "url": url_for('index')},
+        {"name": "Logout", "url": url_for('index')},
         {"name": "Journaling", "url": url_for('journaling')},
         {"name": "Calendar", "url": url_for('calendar')},
         {"name": "Health", "url": url_for('health')},
-        {"name": "Water Tracker", "url": url_for('water')},
         {"name": "Finance", "url": url_for('finance')},
     ]
     return render_template('quick_links.html', user=user, links=links, datetime=datetime)
