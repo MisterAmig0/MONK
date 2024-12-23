@@ -123,8 +123,9 @@ class Agenda(db.Model):
     date = db.Column(db.Date, nullable=False)
     start_time = db.Column(db.Time, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
+    title = db.Column(db.String(100), nullable=False)  # Add this field
     description = db.Column(db.Text, nullable=False)
-    completed = db.Column(db.Boolean, default=False)  
+    completed = db.Column(db.Boolean, default=False)
 
     def to_dict(self):
         return {
@@ -132,9 +133,11 @@ class Agenda(db.Model):
             "date": self.date.isoformat(),
             "start_time": self.start_time.strftime('%H:%M'),
             "end_time": self.end_time.strftime('%H:%M'),
+            "title": self.title,  # Include title
             "description": self.description,
             "completed": self.completed,
         }
+
 
 
 
@@ -260,12 +263,14 @@ def calendar():
     if request.method == 'POST':
         start_time = datetime.strptime(request.form['start_time'], '%H:%M').time()
         end_time = datetime.strptime(request.form['end_time'], '%H:%M').time()
+        title = request.form['title']  # Capture title
         description = request.form['description']
         new_agenda_item = Agenda(
             user=user,
             date=selected_date,
             start_time=start_time,
             end_time=end_time,
+            title=title,
             description=description
         )
         db.session.add(new_agenda_item)
@@ -288,6 +293,7 @@ def calendar():
         next_date=next_date,
         datetime=datetime,
     )
+
 
 @app.route('/delete_agenda/<int:agenda_id>', methods=['POST'])
 def delete_agenda(agenda_id):

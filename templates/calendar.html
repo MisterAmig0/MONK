@@ -129,19 +129,23 @@
             <input type="time" id="start_time" name="start_time" required>
             <label for="end_time">End Time:</label>
             <input type="time" id="end_time" name="end_time" required>
+            <label for="title">Title:</label> <!-- New field -->
+            <input type="text" id="title" name="title" required>
             <label for="description">Description:</label>
-            <input type="text" id="description" name="description" required>
+            <textarea id="description" name="description" required></textarea>
             <button type="submit">Add Task</button>
         </form>
     </div>
-
+    
     <div class="agenda-container">
         <h2>Daily Agenda</h2>
         {% if agenda_items %}
             {% for item in agenda_items %}
                 <div class="agenda-item" style="background-color: {% if item.completed %}#d4edda{% else %}#ffffff{% endif %};">
                     <span class="time">{{ item.start_time }} - {{ item.end_time }}</span>
-                    <span class="description">{{ item.description }}</span>
+                    <span class="title" style="font-weight: bold; cursor: pointer;" onclick="openModal('{{ item.title }}', '{{ item.description }}')">
+                        {{ item.title }}
+                    </span>
                     <form method="POST" action="{{ url_for('toggle_completion', agenda_id=item.id, date=selected_date) }}" style="display: inline;">
                         <button type="submit" style="margin-left: 10px; background-color: {% if item.completed %}#28a745{% else %}#ffc107{% endif %}; color: white; border: none; border-radius: 3px; padding: 5px 10px; cursor: pointer;">
                             {% if item.completed %}Completed{% else %}Mark Complete{% endif %}
@@ -158,7 +162,50 @@
             <p style="text-align: center;">No tasks scheduled for today.</p>
         {% endif %}
     </div>
+    
+    <!-- Modal Structure -->
+    <div id="agendaModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <p id="modalDescription"></p>
+        </div>
+    </div>
+    
+
+    
+    <!-- Modal Script -->
+    <script>
+        function openModal(title, description) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDescription').textContent = description;
+            document.getElementById('agendaModal').style.display = 'block';
+        }
+    
+        function closeModal() {
+            document.getElementById('agendaModal').style.display = 'none';
+        }
+    
+        // Close the modal if the user clicks outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('agendaModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
+    
     {% include 'footer.html' %}
 
 </body>
 </html>
+<script>
+    function toggleDescription(id) {
+        const desc = document.getElementById(`description-${id}`);
+        if (desc.style.display === 'none') {
+            desc.style.display = 'block';
+        } else {
+            desc.style.display = 'none';
+        }
+    }
+</script>
