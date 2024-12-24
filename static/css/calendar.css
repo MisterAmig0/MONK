@@ -102,3 +102,27 @@
     .description {
         color: #555;
     }
+    .completed {
+    background-color: #d4edda;
+}
+.incomplete {
+    background-color: #ffffff;
+}
+.btn-completed {
+    margin-left: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.btn-incomplete {
+    margin-left: 10px;
+    background-color: #ffc107;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
