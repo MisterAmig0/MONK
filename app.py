@@ -139,7 +139,9 @@ class Agenda(db.Model):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     completed = db.Column(db.Boolean, default=False)
+    repeatable = db.Column(db.Boolean, default=False)  # New field for repeatable tasks
     checklist_items = db.relationship('ChecklistItem', backref='agenda', lazy=True)
+
 
     def to_dict(self):
         return {
@@ -287,11 +289,15 @@ def calendar():
     selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
     selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
 
+    # Replicate repeatable tasks for the selected date
+    replicate_repeatable_tasks(user, selected_date)
+
     if request.method == 'POST':
         start_time = datetime.strptime(request.form['start_time'], '%H:%M').time()
         end_time = datetime.strptime(request.form['end_time'], '%H:%M').time()
         title = request.form['title']
         description = request.form['description']
+        repeatable = 'repeatable' in request.form  # Check if repeatable is selected
 
         # Create the agenda item
         new_agenda_item = Agenda(
@@ -301,6 +307,7 @@ def calendar():
             end_time=end_time,
             title=title,
             description=description,
+            repeatable=repeatable,
         )
         db.session.add(new_agenda_item)
         db.session.flush()  # Get the ID for the new agenda item
@@ -332,6 +339,47 @@ def calendar():
         next_date=next_date,
         datetime=datetime,
     )
+
+
+from datetime import datetime, timedelta
+
+def replicate_repeatable_tasks(user, date):
+    repeatable_tasks = Agenda.query.filter_by(user=user, repeatable=True).all()
+
+    for task in repeatable_tasks:
+        # Check if the task already exists for the selected date
+        existing_task = Agenda.query.filter_by(
+            user=user, 
+            date=date, 
+            title=task.title, 
+            start_time=task.start_time, 
+            end_time=task.end_time
+        ).first()
+        if not existing_task:
+            # Clone the task for the new date
+            new_task = Agenda(
+                user=user,
+                date=date,
+                start_time=task.start_time,
+                end_time=task.end_time,
+                title=task.title,
+                description=task.description,
+                completed=False,
+                repeatable=True
+            )
+            db.session.add(new_task)
+
+            # Clone checklist items
+            for checklist_item in task.checklist_items:
+                new_checklist_item = ChecklistItem(
+                    agenda_id=new_task.id,
+                    text=checklist_item.text,
+                    completed=False
+                )
+                db.session.add(new_checklist_item)
+    
+    db.session.commit()
+
 
 
 @app.route('/delete_agenda/<int:agenda_id>', methods=['POST'])
