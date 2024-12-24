@@ -380,8 +380,6 @@ def replicate_repeatable_tasks(user, date):
     
     db.session.commit()
 
-
-
 @app.route('/delete_agenda/<int:agenda_id>', methods=['POST'])
 def delete_agenda(agenda_id):
     user = session.get('user')
@@ -391,12 +389,25 @@ def delete_agenda(agenda_id):
     # Fetch the agenda item by ID and ensure it belongs to the logged-in user
     agenda_item = Agenda.query.filter_by(id=agenda_id, user=user).first()
     if agenda_item:
-        db.session.delete(agenda_item)
+        if agenda_item.repeatable:
+            # Delete all future occurrences of the repeatable task
+            db.session.query(Agenda).filter(
+                Agenda.user == user,
+                Agenda.title == agenda_item.title,  # Match by title
+                Agenda.start_time == agenda_item.start_time,  # Match by start time
+                Agenda.end_time == agenda_item.end_time,  # Match by end time
+                Agenda.date >= agenda_item.date  # Match only future occurrences
+            ).delete(synchronize_session=False)
+        else:
+            # Delete only the selected task
+            db.session.delete(agenda_item)
+
         db.session.commit()
 
     # Redirect to the calendar with the same date
     selected_date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
     return redirect(url_for('calendar', date=selected_date))
+
 
 @app.route('/toggle_completion/<int:agenda_id>', methods=['POST'])
 def toggle_completion(agenda_id):
