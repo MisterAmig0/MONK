@@ -111,6 +111,30 @@
         .description {
             color: #555;
         }
+        .completed {
+        background-color: #d4edda;
+    }
+    .incomplete {
+        background-color: #ffffff;
+    }
+    .btn-completed {
+        margin-left: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+    .btn-incomplete {
+        margin-left: 10px;
+        background-color: #ffc107;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
     </style>
 </head>
 <body>
@@ -161,7 +185,7 @@
         <h2>Daily Agenda</h2>
         {% if agenda_items %}
             {% for item in agenda_items %}
-            <div class="agenda-item" style="background-color: {% if item.completed %}#d4edda{% else %}#ffffff{% endif %};">
+            <div class="agenda-item {{ 'completed' if item.completed else 'incomplete' }}">
                 <span class="time">{{ item.start_time }} - {{ item.end_time }}</span>
                 <span class="title" 
                     style="font-weight: bold; cursor: pointer;" 
@@ -172,7 +196,7 @@
                     {{ item.title }}
                 </span>
                 <form method="POST" action="{{ url_for('toggle_completion', agenda_id=item.id, date=selected_date) }}" style="display: inline;">
-                    <button type="submit" style="margin-left: 10px; background-color: {% if item.completed %}#28a745{% else %}#ffc107{% endif %}; color: white; border: none; border-radius: 3px; padding: 5px 10px; cursor: pointer;">
+                    <button type="submit" class="{{ 'btn-completed' if item.completed else 'btn-incomplete' }}">
                         {% if item.completed %}Completed{% else %}Mark Complete{% endif %}
                     </button>
                 </form>
